@@ -2288,5 +2288,5 @@ p <- ggplot(df1, aes(x = year, y = ner_benefit_per, fill = type)) +
         legend.key.size = unit(0.3, "cm"))  # Adjust size of legend boxes
 
 
-ggsave("/Users/tharakajayalath/Library/CloudStorage/OneDrive-UniversityofSaskatchewan/Chapter II-IrrigationValue/results/images/reallocationBenefitsclimatechnage.png", plot = p, width = 10, height = 7, dpi = 300)
+ggsave("./results/images/reallocationBenefitsclimatechnage.png", plot = p, width = 10, height = 7, dpi = 300)
 

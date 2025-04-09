@@ -27,7 +27,7 @@ return_canola <- return%>%
 
 ### Wheat  ### Wheat ### Wheat  ### Wheat ### Wheat  ### Wheat ### Wheat  ### Wheat 
 
-wheat_ir_2018 <- read_csv('/Users/tharakajayalath/Library/CloudStorage/OneDrive-UniversityofSaskatchewan/Chapter II-IrrigationValue/AquaCropOPSyData/WheatMarginal/merged_simulation_results_wheat_marginal_2018_irrigation.csv')%>%
+wheat_ir_2018 <- read_csv('./AquaCropOPSyData/WheatMarginal/merged_simulation_results_wheat_marginal_2018_irrigation.csv')%>%
   mutate(year=2018)
 
 
@@ -52,7 +52,7 @@ df_wheat_ir <- df_wheat_ir%>%
   select(Site_ID,Max_Irrigation_mm,irr_level_mm,irrq_m3,return_ir,profit_ir)
 
 
-df_wheat_0_irri_2018 <- read_csv('/Users/tharakajayalath/Library/CloudStorage/OneDrive-UniversityofSaskatchewan/Chapter II-IrrigationValue/AquaCropOPSyData/WheatRainfed/wheat_rainfed_2018.csv')
+df_wheat_0_irri_2018 <- read_csv('./AquaCropOPSyData/WheatRainfed/wheat_rainfed_2018.csv')
 
 df_wheat_0_irri <- rbind(df_wheat_0_irri_2018)
 
@@ -110,7 +110,7 @@ wheat <- df_wheat_ir %>%
 
 ### canola  ### canola ### canola  ### canola ### canola  ### canola ### canola  ### canola 
 
-canola_ir_2018 <- read_csv('/Users/tharakajayalath/Library/CloudStorage/OneDrive-UniversityofSaskatchewan/Chapter II-IrrigationValue/AquaCropOPSyData/canolaMarginal/merged_simulation_results_canola_marginal_2018_irrigation.csv')%>%
+canola_ir_2018 <- read_csv('./AquaCropOPSyData/canolaMarginal/merged_simulation_results_canola_marginal_2018_irrigation.csv')%>%
   mutate(year=2018)
 
 
@@ -135,7 +135,7 @@ df_canola_ir <- df_canola_ir%>%
   select(Site_ID,Max_Irrigation_mm,irr_level_mm,irrq_m3,return_ir,profit_ir)
 
 
-df_canola_0_irri_2018 <- read_csv('/Users/tharakajayalath/Library/CloudStorage/OneDrive-UniversityofSaskatchewan/Chapter II-IrrigationValue/AquaCropOPSyData/canolaRainfed/canola_rainfed_2018.csv')
+df_canola_0_irri_2018 <- read_csv('./AquaCropOPSyData/canolaRainfed/canola_rainfed_2018.csv')
 
 df_canola_0_irri <- rbind(df_canola_0_irri_2018)
 
@@ -192,7 +192,7 @@ canola <- df_canola_ir %>%
 ### Potato ### Potato ### Potato ### Potato ### Potato ### Potato 
 
 
-potato_ir_2018 <- read_csv('/Users/tharakajayalath/Library/CloudStorage/OneDrive-UniversityofSaskatchewan/Chapter II-IrrigationValue/AquaCropOPSyData/PotataoMarginal/merged_simulation_results_Potato_marginal_2018_irrigation.csv')%>%
+potato_ir_2018 <- read_csv('./AquaCropOPSyData/PotataoMarginal/merged_simulation_results_Potato_marginal_2018_irrigation.csv')%>%
   mutate(year=2018)
 
 
@@ -492,7 +492,7 @@ df_2018 <- rbind(df_wheat_canola,df_wheat_potato,df_canola_potato,df_wheat_canol
 
 ### Wheat  ### Wheat ### Wheat  ### Wheat ### Wheat  ### Wheat ### Wheat  ### Wheat 
 
-wheat_ir_2019 <- read_csv('/Users/tharakajayalath/Library/CloudStorage/OneDrive-UniversityofSaskatchewan/Chapter II-IrrigationValue/AquaCropOPSyData/WheatMarginal/merged_simulation_results_wheat_marginal_2019_irrigation.csv')%>%
+wheat_ir_2019 <- read_csv('./AquaCropOPSyData/WheatMarginal/merged_simulation_results_wheat_marginal_2019_irrigation.csv')%>%
   mutate(year=2019)
 
 
@@ -517,7 +517,7 @@ df_wheat_ir <- df_wheat_ir%>%
   select(Site_ID,Max_Irrigation_mm,irr_level_mm,irrq_m3,return_ir,profit_ir)
 
 
-df_wheat_0_irri_2019 <- read_csv('/Users/tharakajayalath/Library/CloudStorage/OneDrive-UniversityofSaskatchewan/Chapter II-IrrigationValue/AquaCropOPSyData/WheatRainfed/wheat_rainfed_2019.csv')
+df_wheat_0_irri_2019 <- read_csv('./AquaCropOPSyData/WheatRainfed/wheat_rainfed_2019.csv')
 
 df_wheat_0_irri <- rbind(df_wheat_0_irri_2019)
 
@@ -575,7 +575,7 @@ wheat <- df_wheat_ir %>%
 
 ### canola  ### canola ### canola  ### canola ### canola  ### canola ### canola  ### canola 
 
-canola_ir_2019 <- read_csv('/Users/tharakajayalath/Library/CloudStorage/OneDrive-UniversityofSaskatchewan/Chapter II-IrrigationValue/AquaCropOPSyData/canolaMarginal/merged_simulation_results_canola_marginal_2019_irrigation.csv')%>%
+canola_ir_2019 <- read_csv('./AquaCropOPSyData/canolaMarginal/merged_simulation_results_canola_marginal_2019_irrigation.csv')%>%
   mutate(year=2019)
 
 
@@ -600,7 +600,7 @@ df_canola_ir <- df_canola_ir%>%
   select(Site_ID,Max_Irrigation_mm,irr_level_mm,irrq_m3,return_ir,profit_ir)
 
 
-df_canola_0_irri_2019 <- read_csv('/Users/tharakajayalath/Library/CloudStorage/OneDrive-UniversityofSaskatchewan/Chapter II-IrrigationValue/AquaCropOPSyData/canolaRainfed/canola_rainfed_2019.csv')
+df_canola_0_irri_2019 <- read_csv('./AquaCropOPSyData/canolaRainfed/canola_rainfed_2019.csv')
 
 df_canola_0_irri <- rbind(df_canola_0_irri_2019)
 
@@ -657,7 +657,7 @@ canola <- df_canola_ir %>%
 ### Potato ### Potato ### Potato ### Potato ### Potato ### Potato 
 
 
-potato_ir_2019 <- read_csv('/Users/tharakajayalath/Library/CloudStorage/OneDrive-UniversityofSaskatchewan/Chapter II-IrrigationValue/AquaCropOPSyData/PotataoMarginal/merged_simulation_results_Potato_marginal_2019_irrigation.csv')%>%
+potato_ir_2019 <- read_csv('./AquaCropOPSyData/PotataoMarginal/merged_simulation_results_Potato_marginal_2019_irrigation.csv')%>%
   mutate(year=2019)
 
 
@@ -943,7 +943,7 @@ df_2019 <- rbind(df_wheat_canola,df_wheat_potato,df_canola_potato,df_wheat_canol
 
 ### Wheat  ### Wheat ### Wheat  ### Wheat ### Wheat  ### Wheat ### Wheat  ### Wheat 
 
-wheat_ir_2020 <- read_csv('/Users/tharakajayalath/Library/CloudStorage/OneDrive-UniversityofSaskatchewan/Chapter II-IrrigationValue/AquaCropOPSyData/WheatMarginal/merged_simulation_results_wheat_marginal_2020_irrigation.csv')%>%
+wheat_ir_2020 <- read_csv('./AquaCropOPSyData/WheatMarginal/merged_simulation_results_wheat_marginal_2020_irrigation.csv')%>%
   mutate(year=2020)
 
 
@@ -968,7 +968,7 @@ df_wheat_ir <- df_wheat_ir%>%
   select(Site_ID,Max_Irrigation_mm,irr_level_mm,irrq_m3,return_ir,profit_ir)
 
 
-df_wheat_0_irri_2020 <- read_csv('/Users/tharakajayalath/Library/CloudStorage/OneDrive-UniversityofSaskatchewan/Chapter II-IrrigationValue/AquaCropOPSyData/WheatRainfed/wheat_rainfed_2020.csv')
+df_wheat_0_irri_2020 <- read_csv('./AquaCropOPSyData/WheatRainfed/wheat_rainfed_2020.csv')
 
 df_wheat_0_irri <- rbind(df_wheat_0_irri_2020)
 
@@ -1026,7 +1026,7 @@ wheat <- df_wheat_ir %>%
 
 ### canola  ### canola ### canola  ### canola ### canola  ### canola ### canola  ### canola 
 
-canola_ir_2020 <- read_csv('/Users/tharakajayalath/Library/CloudStorage/OneDrive-UniversityofSaskatchewan/Chapter II-IrrigationValue/AquaCropOPSyData/canolaMarginal/merged_simulation_results_canola_marginal_2020_irrigation.csv')%>%
+canola_ir_2020 <- read_csv('./AquaCropOPSyData/canolaMarginal/merged_simulation_results_canola_marginal_2020_irrigation.csv')%>%
   mutate(year=2020)
 
 
@@ -1051,7 +1051,7 @@ df_canola_ir <- df_canola_ir%>%
   select(Site_ID,Max_Irrigation_mm,irr_level_mm,irrq_m3,return_ir,profit_ir)
 
 
-df_canola_0_irri_2020 <- read_csv('/Users/tharakajayalath/Library/CloudStorage/OneDrive-UniversityofSaskatchewan/Chapter II-IrrigationValue/AquaCropOPSyData/canolaRainfed/canola_rainfed_2020.csv')
+df_canola_0_irri_2020 <- read_csv('./AquaCropOPSyData/canolaRainfed/canola_rainfed_2020.csv')
 
 df_canola_0_irri <- rbind(df_canola_0_irri_2020)
 
@@ -1108,7 +1108,7 @@ canola <- df_canola_ir %>%
 ### Potato ### Potato ### Potato ### Potato ### Potato ### Potato 
 
 
-potato_ir_2020 <- read_csv('/Users/tharakajayalath/Library/CloudStorage/OneDrive-UniversityofSaskatchewan/Chapter II-IrrigationValue/AquaCropOPSyData/PotataoMarginal/merged_simulation_results_Potato_marginal_2020_irrigation.csv')%>%
+potato_ir_2020 <- read_csv('./AquaCropOPSyData/PotataoMarginal/merged_simulation_results_Potato_marginal_2020_irrigation.csv')%>%
   mutate(year=2020)
 
 
@@ -1391,7 +1391,7 @@ df_2020 <- rbind(df_wheat_canola,df_wheat_potato,df_canola_potato,df_wheat_canol
 
 ### Wheat  ### Wheat ### Wheat  ### Wheat ### Wheat  ### Wheat ### Wheat  ### Wheat 
 
-wheat_ir_2021 <- read_csv('/Users/tharakajayalath/Library/CloudStorage/OneDrive-UniversityofSaskatchewan/Chapter II-IrrigationValue/AquaCropOPSyData/WheatMarginal/merged_simulation_results_wheat_marginal_2021_irrigation.csv')%>%
+wheat_ir_2021 <- read_csv('./AquaCropOPSyData/WheatMarginal/merged_simulation_results_wheat_marginal_2021_irrigation.csv')%>%
   mutate(year=2021)
 
 
@@ -1416,7 +1416,7 @@ df_wheat_ir <- df_wheat_ir%>%
   select(Site_ID,Max_Irrigation_mm,irr_level_mm,irrq_m3,return_ir,profit_ir)
 
 
-df_wheat_0_irri_2021 <- read_csv('/Users/tharakajayalath/Library/CloudStorage/OneDrive-UniversityofSaskatchewan/Chapter II-IrrigationValue/AquaCropOPSyData/WheatRainfed/wheat_rainfed_2021.csv')
+df_wheat_0_irri_2021 <- read_csv('./AquaCropOPSyData/WheatRainfed/wheat_rainfed_2021.csv')
 
 df_wheat_0_irri <- rbind(df_wheat_0_irri_2021)
 
@@ -1474,7 +1474,7 @@ wheat <- df_wheat_ir %>%
 
 ### canola  ### canola ### canola  ### canola ### canola  ### canola ### canola  ### canola 
 
-canola_ir_2021 <- read_csv('/Users/tharakajayalath/Library/CloudStorage/OneDrive-UniversityofSaskatchewan/Chapter II-IrrigationValue/AquaCropOPSyData/canolaMarginal/merged_simulation_results_canola_marginal_2021_irrigation.csv')%>%
+canola_ir_2021 <- read_csv('./AquaCropOPSyData/canolaMarginal/merged_simulation_results_canola_marginal_2021_irrigation.csv')%>%
   mutate(year=2021)
 
 
@@ -1499,7 +1499,7 @@ df_canola_ir <- df_canola_ir%>%
   select(Site_ID,Max_Irrigation_mm,irr_level_mm,irrq_m3,return_ir,profit_ir)
 
 
-df_canola_0_irri_2021 <- read_csv('/Users/tharakajayalath/Library/CloudStorage/OneDrive-UniversityofSaskatchewan/Chapter II-IrrigationValue/AquaCropOPSyData/canolaRainfed/canola_rainfed_2021.csv')
+df_canola_0_irri_2021 <- read_csv('./AquaCropOPSyData/canolaRainfed/canola_rainfed_2021.csv')
 
 df_canola_0_irri <- rbind(df_canola_0_irri_2021)
 
@@ -1556,7 +1556,7 @@ canola <- df_canola_ir %>%
 ### Potato ### Potato ### Potato ### Potato ### Potato ### Potato 
 
 
-potato_ir_2021 <- read_csv('/Users/tharakajayalath/Library/CloudStorage/OneDrive-UniversityofSaskatchewan/Chapter II-IrrigationValue/AquaCropOPSyData/PotataoMarginal/merged_simulation_results_Potato_marginal_2021_irrigation.csv')%>%
+potato_ir_2021 <- read_csv('./AquaCropOPSyData/PotataoMarginal/merged_simulation_results_Potato_marginal_2021_irrigation.csv')%>%
   mutate(year=2021)
 
 
@@ -1841,7 +1841,7 @@ df_2021 <- rbind(df_wheat_canola,df_wheat_potato,df_canola_potato,df_wheat_canol
 
 ### Wheat  ### Wheat ### Wheat  ### Wheat ### Wheat  ### Wheat ### Wheat  ### Wheat 
 
-wheat_ir_2022 <- read_csv('/Users/tharakajayalath/Library/CloudStorage/OneDrive-UniversityofSaskatchewan/Chapter II-IrrigationValue/AquaCropOPSyData/WheatMarginal/merged_simulation_results_wheat_marginal_2022_irrigation.csv')%>%
+wheat_ir_2022 <- read_csv('./AquaCropOPSyData/WheatMarginal/merged_simulation_results_wheat_marginal_2022_irrigation.csv')%>%
   mutate(year=2022)
 
 
@@ -1866,7 +1866,7 @@ df_wheat_ir <- df_wheat_ir%>%
   select(Site_ID,Max_Irrigation_mm,irr_level_mm,irrq_m3,return_ir,profit_ir)
 
 
-df_wheat_0_irri_2022 <- read_csv('/Users/tharakajayalath/Library/CloudStorage/OneDrive-UniversityofSaskatchewan/Chapter II-IrrigationValue/AquaCropOPSyData/WheatRainfed/wheat_rainfed_2022.csv')
+df_wheat_0_irri_2022 <- read_csv('./AquaCropOPSyData/WheatRainfed/wheat_rainfed_2022.csv')
 
 df_wheat_0_irri <- rbind(df_wheat_0_irri_2022)
 
@@ -1924,7 +1924,7 @@ wheat <- df_wheat_ir %>%
 
 ### canola  ### canola ### canola  ### canola ### canola  ### canola ### canola  ### canola 
 
-canola_ir_2022 <- read_csv('/Users/tharakajayalath/Library/CloudStorage/OneDrive-UniversityofSaskatchewan/Chapter II-IrrigationValue/AquaCropOPSyData/canolaMarginal/merged_simulation_results_canola_marginal_2022_irrigation.csv')%>%
+canola_ir_2022 <- read_csv('./AquaCropOPSyData/canolaMarginal/merged_simulation_results_canola_marginal_2022_irrigation.csv')%>%
   mutate(year=2022)
 
 
@@ -1949,7 +1949,7 @@ df_canola_ir <- df_canola_ir%>%
   select(Site_ID,Max_Irrigation_mm,irr_level_mm,irrq_m3,return_ir,profit_ir)
 
 
-df_canola_0_irri_2022 <- read_csv('/Users/tharakajayalath/Library/CloudStorage/OneDrive-UniversityofSaskatchewan/Chapter II-IrrigationValue/AquaCropOPSyData/canolaRainfed/canola_rainfed_2022.csv')
+df_canola_0_irri_2022 <- read_csv('./AquaCropOPSyData/canolaRainfed/canola_rainfed_2022.csv')
 
 df_canola_0_irri <- rbind(df_canola_0_irri_2022)
 
@@ -2006,7 +2006,7 @@ canola <- df_canola_ir %>%
 ### Potato ### Potato ### Potato ### Potato ### Potato ### Potato 
 
 
-potato_ir_2022 <- read_csv('/Users/tharakajayalath/Library/CloudStorage/OneDrive-UniversityofSaskatchewan/Chapter II-IrrigationValue/AquaCropOPSyData/PotataoMarginal/merged_simulation_results_Potato_marginal_2022_irrigation.csv')%>%
+potato_ir_2022 <- read_csv('./AquaCropOPSyData/PotataoMarginal/merged_simulation_results_Potato_marginal_2022_irrigation.csv')%>%
   mutate(year=2022)
 
 
@@ -2290,7 +2290,7 @@ df_2022 <- rbind(df_wheat_canola,df_wheat_potato,df_canola_potato,df_wheat_canol
 
 ### Wheat  ### Wheat ### Wheat  ### Wheat ### Wheat  ### Wheat ### Wheat  ### Wheat 
 
-wheat_ir_2023 <- read_csv('/Users/tharakajayalath/Library/CloudStorage/OneDrive-UniversityofSaskatchewan/Chapter II-IrrigationValue/AquaCropOPSyData/WheatMarginal/merged_simulation_results_wheat_marginal_2023_irrigation.csv')%>%
+wheat_ir_2023 <- read_csv('./AquaCropOPSyData/WheatMarginal/merged_simulation_results_wheat_marginal_2023_irrigation.csv')%>%
   mutate(year=2023)
 
 
@@ -2315,7 +2315,7 @@ df_wheat_ir <- df_wheat_ir%>%
   select(Site_ID,Max_Irrigation_mm,irr_level_mm,irrq_m3,return_ir,profit_ir)
 
 
-df_wheat_0_irri_2023 <- read_csv('/Users/tharakajayalath/Library/CloudStorage/OneDrive-UniversityofSaskatchewan/Chapter II-IrrigationValue/AquaCropOPSyData/WheatRainfed/wheat_rainfed_2023.csv')
+df_wheat_0_irri_2023 <- read_csv('./AquaCropOPSyData/WheatRainfed/wheat_rainfed_2023.csv')
 
 df_wheat_0_irri <- rbind(df_wheat_0_irri_2023)
 
@@ -2373,7 +2373,7 @@ wheat <- df_wheat_ir %>%
 
 ### canola  ### canola ### canola  ### canola ### canola  ### canola ### canola  ### canola 
 
-canola_ir_2023 <- read_csv('/Users/tharakajayalath/Library/CloudStorage/OneDrive-UniversityofSaskatchewan/Chapter II-IrrigationValue/AquaCropOPSyData/canolaMarginal/merged_simulation_results_canola_marginal_2023_irrigation.csv')%>%
+canola_ir_2023 <- read_csv('./AquaCropOPSyData/canolaMarginal/merged_simulation_results_canola_marginal_2023_irrigation.csv')%>%
   mutate(year=2023)
 
 
@@ -2398,7 +2398,7 @@ df_canola_ir <- df_canola_ir%>%
   select(Site_ID,Max_Irrigation_mm,irr_level_mm,irrq_m3,return_ir,profit_ir)
 
 
-df_canola_0_irri_2023 <- read_csv('/Users/tharakajayalath/Library/CloudStorage/OneDrive-UniversityofSaskatchewan/Chapter II-IrrigationValue/AquaCropOPSyData/canolaRainfed/canola_rainfed_2023.csv')
+df_canola_0_irri_2023 <- read_csv('./AquaCropOPSyData/canolaRainfed/canola_rainfed_2023.csv')
 
 df_canola_0_irri <- rbind(df_canola_0_irri_2023)
 
@@ -2455,7 +2455,7 @@ canola <- df_canola_ir %>%
 ### Potato ### Potato ### Potato ### Potato ### Potato ### Potato 
 
 
-potato_ir_2023 <- read_csv('/Users/tharakajayalath/Library/CloudStorage/OneDrive-UniversityofSaskatchewan/Chapter II-IrrigationValue/AquaCropOPSyData/PotataoMarginal/merged_simulation_results_Potato_marginal_2023_irrigation.csv')%>%
+potato_ir_2023 <- read_csv('./AquaCropOPSyData/PotataoMarginal/merged_simulation_results_Potato_marginal_2023_irrigation.csv')%>%
   mutate(year=2023)
 
 
@@ -2760,7 +2760,7 @@ library(xtable)
 latex_table <- xtable(df_all)
 
 # Save the LaTeX table to a .tex file
-sink( "/Users/tharakajayalath/Library/CloudStorage/OneDrive-UniversityofSaskatchewan/Chapter II-IrrigationValue/results/Tables/Table_1_to_appendix.tex") 
+sink( "./results/Tables/Table_1_to_appendix.tex") 
 print(latex_table)
 sink()  # Reset output back to console
 
@@ -2783,7 +2783,7 @@ df_all_average <- df_all%>%
 latex_table <- xtable(df_all_average)
 
 # Save the LaTeX table to a .tex file
-sink( "/Users/tharakajayalath/Library/CloudStorage/OneDrive-UniversityofSaskatchewan/Chapter II-IrrigationValue/results/Tables/Table_1.tex") 
+sink( "./results/Tables/Table_1.tex") 
 print(latex_table)
 sink()  # Reset output back to console
 
@@ -2825,7 +2825,7 @@ p <- ggplot(df1, aes(x = year, y = ner_benefit_per, fill = type)) +
 
 
 
-ggsave("/Users/tharakajayalath/Library/CloudStorage/OneDrive-UniversityofSaskatchewan/Chapter II-IrrigationValue/results/images/reallocationBenefits.png", plot = p, width = 10, height = 7, dpi = 300)
+ggsave("./results/images/reallocationBenefits.png", plot = p, width = 10, height = 7, dpi = 300)
 
 
 

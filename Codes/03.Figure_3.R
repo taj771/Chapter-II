@@ -7,12 +7,12 @@ rm(list = ls())
 
 #### Rain-fed #### Rain-fed #### Rain-fed #### Rain-fed #### Rain-fed #### Rain-fed #### Rain-fed
 
-wheat_rf_2018 <- read_csv('/Users/tharakajayalath/Library/CloudStorage/OneDrive-UniversityofSaskatchewan/Chapter II-IrrigationValue/AquaCropOPSyData/WheatRainfed/wheat_rainfed_2018.csv')
-wheat_rf_2019 <- read_csv('/Users/tharakajayalath/Library/CloudStorage/OneDrive-UniversityofSaskatchewan/Chapter II-IrrigationValue/AquaCropOPSyData/WheatRainfed/wheat_rainfed_2019.csv')
-wheat_rf_2020 <- read_csv('/Users/tharakajayalath/Library/CloudStorage/OneDrive-UniversityofSaskatchewan/Chapter II-IrrigationValue/AquaCropOPSyData/WheatRainfed/wheat_rainfed_2020.csv') 
-wheat_rf_2021 <- read_csv('/Users/tharakajayalath/Library/CloudStorage/OneDrive-UniversityofSaskatchewan/Chapter II-IrrigationValue/AquaCropOPSyData/WheatRainfed/wheat_rainfed_2021.csv')
-wheat_rf_2022 <- read_csv('/Users/tharakajayalath/Library/CloudStorage/OneDrive-UniversityofSaskatchewan/Chapter II-IrrigationValue/AquaCropOPSyData/WheatRainfed/wheat_rainfed_2022.csv')
-wheat_rf_2023 <- read_csv('/Users/tharakajayalath/Library/CloudStorage/OneDrive-UniversityofSaskatchewan/Chapter II-IrrigationValue/AquaCropOPSyData/WheatRainfed/wheat_rainfed_2023.csv')
+wheat_rf_2018 <- read_csv('./AquaCropOPSyData/WheatRainfed/wheat_rainfed_2018.csv')
+wheat_rf_2019 <- read_csv('./AquaCropOPSyData/WheatRainfed/wheat_rainfed_2019.csv')
+wheat_rf_2020 <- read_csv('./AquaCropOPSyData/WheatRainfed/wheat_rainfed_2020.csv') 
+wheat_rf_2021 <- read_csv('./AquaCropOPSyData/WheatRainfed/wheat_rainfed_2021.csv')
+wheat_rf_2022 <- read_csv('./AquaCropOPSyData/WheatRainfed/wheat_rainfed_2022.csv')
+wheat_rf_2023 <- read_csv('./AquaCropOPSyData/WheatRainfed/wheat_rainfed_2023.csv')
 
 df_wheat_rf <- rbind(wheat_rf_2018, wheat_rf_2019, wheat_rf_2020, wheat_rf_2021, wheat_rf_2022, wheat_rf_2023) %>%
   mutate(
@@ -30,12 +30,12 @@ df_wheat_rf <- rbind(wheat_rf_2018, wheat_rf_2019, wheat_rf_2020, wheat_rf_2021,
   select(Year, `Dry yield rain (bu/ac)`, Site)
 
 
-canola_rf_2018 <- read_csv('/Users/tharakajayalath/Library/CloudStorage/OneDrive-UniversityofSaskatchewan/Chapter II-IrrigationValue/AquaCropOPSyData/canolaRainfed/canola_rainfed_2018.csv')
-canola_rf_2019 <- read_csv('/Users/tharakajayalath/Library/CloudStorage/OneDrive-UniversityofSaskatchewan/Chapter II-IrrigationValue/AquaCropOPSyData/canolaRainfed/canola_rainfed_2019.csv')
-canola_rf_2020 <- read_csv('/Users/tharakajayalath/Library/CloudStorage/OneDrive-UniversityofSaskatchewan/Chapter II-IrrigationValue/AquaCropOPSyData/canolaRainfed/canola_rainfed_2020.csv') 
-canola_rf_2021 <- read_csv('/Users/tharakajayalath/Library/CloudStorage/OneDrive-UniversityofSaskatchewan/Chapter II-IrrigationValue/AquaCropOPSyData/canolaRainfed/canola_rainfed_2021.csv')
-canola_rf_2022 <- read_csv('/Users/tharakajayalath/Library/CloudStorage/OneDrive-UniversityofSaskatchewan/Chapter II-IrrigationValue/AquaCropOPSyData/canolaRainfed/canola_rainfed_2022.csv')
-canola_rf_2023 <- read_csv('/Users/tharakajayalath/Library/CloudStorage/OneDrive-UniversityofSaskatchewan/Chapter II-IrrigationValue/AquaCropOPSyData/canolaRainfed/canola_rainfed_2023.csv')
+canola_rf_2018 <- read_csv('./AquaCropOPSyData/canolaRainfed/canola_rainfed_2018.csv')
+canola_rf_2019 <- read_csv('./AquaCropOPSyData/canolaRainfed/canola_rainfed_2019.csv')
+canola_rf_2020 <- read_csv('./AquaCropOPSyData/canolaRainfed/canola_rainfed_2020.csv') 
+canola_rf_2021 <- read_csv('./AquaCropOPSyData/canolaRainfed/canola_rainfed_2021.csv')
+canola_rf_2022 <- read_csv('./AquaCropOPSyData/canolaRainfed/canola_rainfed_2022.csv')
+canola_rf_2023 <- read_csv('./AquaCropOPSyData/canolaRainfed/canola_rainfed_2023.csv')
 
 df_canola_rf <- rbind(canola_rf_2018,canola_rf_2019,canola_rf_2020,canola_rf_2021,canola_rf_2022,canola_rf_2023)%>%
   mutate(
@@ -55,12 +55,12 @@ df_canola_rf <- rbind(canola_rf_2018,canola_rf_2019,canola_rf_2020,canola_rf_202
 ### irrigation ### irrigation ### irrigation ### irrigation ### irrigation ### irrigation
 
 
-wheat_ir_2018 <- read_csv('/Users/tharakajayalath/Library/CloudStorage/OneDrive-UniversityofSaskatchewan/Chapter II-IrrigationValue/AquaCropOPSyData/WheatNetIrriDeamad/wheat_netirridemand_2018.csv')
-wheat_ir_2019 <- read_csv('/Users/tharakajayalath/Library/CloudStorage/OneDrive-UniversityofSaskatchewan/Chapter II-IrrigationValue/AquaCropOPSyData/WheatNetIrriDeamad/wheat_netirridemand_2019.csv')
-wheat_ir_2020 <- read_csv('/Users/tharakajayalath/Library/CloudStorage/OneDrive-UniversityofSaskatchewan/Chapter II-IrrigationValue/AquaCropOPSyData/WheatNetIrriDeamad/wheat_netirridemand_2020.csv') 
-wheat_ir_2021 <- read_csv('/Users/tharakajayalath/Library/CloudStorage/OneDrive-UniversityofSaskatchewan/Chapter II-IrrigationValue/AquaCropOPSyData/WheatNetIrriDeamad/wheat_netirridemand_2021.csv')
-wheat_ir_2022 <- read_csv('/Users/tharakajayalath/Library/CloudStorage/OneDrive-UniversityofSaskatchewan/Chapter II-IrrigationValue/AquaCropOPSyData/WheatNetIrriDeamad/wheat_netirridemand_2022.csv')
-wheat_ir_2023 <- read_csv('/Users/tharakajayalath/Library/CloudStorage/OneDrive-UniversityofSaskatchewan/Chapter II-IrrigationValue/AquaCropOPSyData/WheatNetIrriDeamad/wheat_netirridemand_2023.csv')
+wheat_ir_2018 <- read_csv('./AquaCropOPSyData/WheatNetIrriDeamad/wheat_netirridemand_2018.csv')
+wheat_ir_2019 <- read_csv('./AquaCropOPSyData/WheatNetIrriDeamad/wheat_netirridemand_2019.csv')
+wheat_ir_2020 <- read_csv('./AquaCropOPSyData/WheatNetIrriDeamad/wheat_netirridemand_2020.csv') 
+wheat_ir_2021 <- read_csv('./AquaCropOPSyData/WheatNetIrriDeamad/wheat_netirridemand_2021.csv')
+wheat_ir_2022 <- read_csv('./AquaCropOPSyData/WheatNetIrriDeamad/wheat_netirridemand_2022.csv')
+wheat_ir_2023 <- read_csv('./AquaCropOPSyData/WheatNetIrriDeamad/wheat_netirridemand_2023.csv')
 
 df_wheat_ir <- rbind(wheat_ir_2018, wheat_ir_2019, wheat_ir_2020, wheat_ir_2021, wheat_ir_2022, wheat_ir_2023) %>%
   mutate(
@@ -79,12 +79,12 @@ df_wheat_ir <- rbind(wheat_ir_2018, wheat_ir_2019, wheat_ir_2020, wheat_ir_2021,
   select(Year, `Dry yield irri (bu/ac)`,irrq_m3,  Site)
 
 
-canola_ir_2018 <- read_csv('/Users/tharakajayalath/Library/CloudStorage/OneDrive-UniversityofSaskatchewan/Chapter II-IrrigationValue/AquaCropOPSyData/canolaNetIrriDeamad/canola_netirridemand_2018.csv')
-canola_ir_2019 <- read_csv('/Users/tharakajayalath/Library/CloudStorage/OneDrive-UniversityofSaskatchewan/Chapter II-IrrigationValue/AquaCropOPSyData/canolaNetIrriDeamad/canola_netirridemand_2019.csv')
-canola_ir_2020 <- read_csv('/Users/tharakajayalath/Library/CloudStorage/OneDrive-UniversityofSaskatchewan/Chapter II-IrrigationValue/AquaCropOPSyData/canolaNetIrriDeamad/canola_netirridemand_2020.csv') 
-canola_ir_2021 <- read_csv('/Users/tharakajayalath/Library/CloudStorage/OneDrive-UniversityofSaskatchewan/Chapter II-IrrigationValue/AquaCropOPSyData/canolaNetIrriDeamad/canola_netirridemand_2021.csv')
-canola_ir_2022 <- read_csv('/Users/tharakajayalath/Library/CloudStorage/OneDrive-UniversityofSaskatchewan/Chapter II-IrrigationValue/AquaCropOPSyData/canolaNetIrriDeamad/canola_netirridemand_2022.csv')
-canola_ir_2023 <- read_csv('/Users/tharakajayalath/Library/CloudStorage/OneDrive-UniversityofSaskatchewan/Chapter II-IrrigationValue/AquaCropOPSyData/canolaNetIrriDeamad/canola_netirridemand_2023.csv')
+canola_ir_2018 <- read_csv('./AquaCropOPSyData/canolaNetIrriDeamad/canola_netirridemand_2018.csv')
+canola_ir_2019 <- read_csv('./AquaCropOPSyData/canolaNetIrriDeamad/canola_netirridemand_2019.csv')
+canola_ir_2020 <- read_csv('./AquaCropOPSyData/canolaNetIrriDeamad/canola_netirridemand_2020.csv') 
+canola_ir_2021 <- read_csv('./AquaCropOPSyData/canolaNetIrriDeamad/canola_netirridemand_2021.csv')
+canola_ir_2022 <- read_csv('./AquaCropOPSyData/canolaNetIrriDeamad/canola_netirridemand_2022.csv')
+canola_ir_2023 <- read_csv('./AquaCropOPSyData/canolaNetIrriDeamad/canola_netirridemand_2023.csv')
 
 df_canola_ir <- rbind(canola_ir_2018, canola_ir_2019, canola_ir_2020, canola_ir_2021, canola_ir_2022, canola_ir_2023) %>%
   mutate(
@@ -359,7 +359,7 @@ combined_plot <- wrap_plots(plots, ncol = 3) +
 # Display the combined plot with the legend on the side
 combined_plot
 
-ggsave("/Users/tharakajayalath/Library/CloudStorage/OneDrive-UniversityofSaskatchewan/Chapter II-IrrigationValue/results/images/AverageValue_revenue_map.png", plot = combined_plot, width = 10, height = 7, dpi = 300)
+ggsave("./results/images/AverageValue_revenue_map.png", plot = combined_plot, width = 10, height = 7, dpi = 300)
 
 
 # Map -2 : Based on Profit
@@ -450,6 +450,6 @@ combined_plot <- wrap_plots(plots, ncol = 3) +
 # Display the combined plot with the legend on the side
 combined_plot
 
-ggsave("/Users/tharakajayalath/Library/CloudStorage/OneDrive-UniversityofSaskatchewan/Chapter II-IrrigationValue/results/images/AverageValue_profit_map.png", plot = combined_plot, width = 10, height = 7, dpi = 300)
+ggsave("./results/images/AverageValue_profit_map.png", plot = combined_plot, width = 10, height = 7, dpi = 300)
 
 

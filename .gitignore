@@ -3,3 +3,16 @@
 .RData
 .Ruserdata
 AquaCropOPSyData/
+AquaR/
+CropGeoJson/
+Data/
+IrrigationWorkshopSlides/
+Litrature/
+Manuscript/
+Others/
+Presentations/
+SmiET/
+census_cache/
+maps/
+output/
+results/

@@ -2135,6 +2135,11 @@ df_2035 <- rbind(df_wheat_canola,df_wheat_canola_potato)%>%
 
 df_all <- rbind(df_2030,df_2031, df_2032,df_2033, df_2034, df_2035)
 
+df_all_noprcpchane <- df_all%>%
+  select(year,type,net_benefit)%>%
+  rename(net_benefit_nochange = net_benefit)
+
+
 
 df1 <- df_all %>%
   filter(type %in% c("wheat-Canola","wheat-canola-potato"))

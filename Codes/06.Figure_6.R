@@ -15257,6 +15257,7 @@ p <- ggplot(df_all, aes(x = type, y = ner_benefit_per, fill = type, color = type
 ggsave("./results/images/reallocationBenefitsclimatechnage.png", plot = p, width = 10, height = 7, dpi = 300)
 
 
+
 # Stop execution here
 stop("Stopping execution after this line")
 

@@ -2795,33 +2795,70 @@ df1 <- df_all %>%
 df2 <- df_all_average%>%
   filter(type %in% c("wheat-Canola","wheat-canola-potato"))
 
+# Dummy data to create the legend without adding a visible line
+legend_dummy <- data.frame(
+  type = c("wheat-Canola", "wheat-canola-potato"),
+  ave_net_benefit_per = c(-9999, -9999)  # Well outside the y-axis limits
+)
+
+
 # Plot
 p <- ggplot(df1, aes(x = year, y = ner_benefit_per, fill = type)) +
-  geom_col(position = position_dodge(width = 0.4), width = 0.3) +  # Bar plot
-  geom_text(aes(label = paste0(round(ner_benefit_per, 1), "%")), 
+  geom_col(position = position_dodge(width = 0.4), width = 0.3) +
+  geom_text(aes(label = paste0(round(ner_benefit_per, 1), "%")),
             position = position_dodge(width = 0.8), 
-            vjust = -0.5, size = 4) +  # Add percentage labels
-  geom_hline(data = df2, aes(yintercept = ave_net_benefit_per, color = type), 
-             linetype = "dashed", size = 0.6, show.legend = FALSE) +  # Horizontal average line per type
-  scale_x_continuous(breaks = seq(2015, 2023, by = 1), expand = c(0, 0)) +  
-  scale_y_continuous(breaks = seq(-100, 100, by = 5), limits = c(-0.5, 35), expand = c(0, 0)) +  
-  labs(x = "Year", y = "Net Benefit (%)", fill = NULL) +  # Remove legend title
-  scale_fill_manual(values = c("wheat-Canola" = "darkgreen", "wheat-canola-potato" = "darkred"), 
-                    labels = c("Wheat & Canola", "Wheat, Canola & Potato"),
-                    name = "Allocation between") +  # Rename legend labels for fill
-  scale_color_manual(values = c("wheat-Canola" = "darkgreen", "wheat-canola-potato" = "darkred")) +  # Match color for horizontal lines
+            vjust = -0.5, size = 4) +
+  
+  # Real horizontal lines (no legend)
+  geom_hline(data = df2, aes(yintercept = ave_net_benefit_per, color = type, linetype = type), 
+             size = 0.6, show.legend = FALSE) +
+  
+  # Dummy lines for legend (invisible but shows in legend)
+  geom_hline(data = legend_dummy, aes(yintercept = ave_net_benefit_per, color = type, linetype = type), 
+             alpha = 0, size = 0.6, show.legend = TRUE) +
+  
+  scale_x_continuous(breaks = seq(2015, 2023, by = 1), expand = c(0, 0)) +
+  scale_y_continuous(breaks = seq(-100, 100, by = 5), limits = c(-0.5, 35), expand = c(0, 0)) +
+  
+  labs(x = "Year", y = "Net Benefit (%)", fill = NULL,
+       color = "Average Benefit (2018:2023)", linetype = "Average Benefit (2018:2023)") +
+  
+  scale_fill_manual(
+    values = c("wheat-Canola" = "darkgreen", "wheat-canola-potato" = "darkred"), 
+    labels = c("Wheat & Canola", "Wheat, Canola & Potato"),
+    name = "Allocation Between"
+  ) +
+  scale_color_manual(
+    values = c("wheat-Canola" = "darkgreen", "wheat-canola-potato" = "darkred"),
+    labels = c("Wheat & Canola", "Wheat, Canola & Potato")
+  ) +
+  scale_linetype_manual(
+    values = c("wheat-Canola" = "dashed", "wheat-canola-potato" = "dashed"),
+    labels = c("Wheat & Canola", "Wheat, Canola & Potato")
+  ) +
+  
+  guides(
+    fill = guide_legend(order = 1),
+    color = guide_legend(order = 2, override.aes = list(alpha = 1)),
+    linetype = guide_legend(order = 2)
+  ) +
+  
   theme_minimal() +
-  theme(legend.position = "bottom") +
-  theme(panel.grid = element_blank(),          # Remove all grid lines
-        axis.line = element_line(color = "black"), # Keep the axis lines
-        panel.border = element_rect(color = "white", fill = NA),
-        axis.text.x = element_text(size = 12),  # Adjust x-axis text size
-        axis.text.y = element_text(size = 12),  # Adjust y-axis text size
-        axis.title.x = element_text(size = 12),  # Adjust x-axis title size
-        axis.title.y = element_text(size = 12),   # Adjust y-axis title size
-        legend.text = element_text(size = 12),    # Adjust legend text size
-        axis.ticks = element_line(size = 0.8),
-        legend.key.size = unit(0.3, "cm"))  # Adjust size of legend boxes
+  theme(
+    legend.position = "bottom",
+    legend.box = "vertical",
+    panel.grid = element_blank(),
+    axis.line = element_line(color = "black"),
+    panel.border = element_rect(color = "white", fill = NA),
+    axis.text.x = element_text(size = 18),
+    axis.text.y = element_text(size = 18),
+    axis.title.x = element_text(size = 18),
+    axis.title.y = element_text(size = 18),
+    legend.text = element_text(size = 18),
+    legend.title = element_text(size = 18),
+    axis.ticks = element_line(size = 0.8),
+    legend.key.size = unit(0.4, "cm")
+  )
 
 
 

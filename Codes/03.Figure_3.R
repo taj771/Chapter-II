@@ -453,3 +453,32 @@ combined_plot
 ggsave("./results/images/AverageValue_profit_map.png", plot = combined_plot, width = 10, height = 7, dpi = 300)
 
 
+###########################################################################
+
+df_one_map <- df_map%>%
+  #filter(year %in% c(2018,2021,2023))%>%
+  group_by(FID)%>%
+  mutate(prof_val_mm_w_average = mean(prof_val_mm_w))%>%
+  ungroup()%>%
+  select(FID,prof_val_mm_w_average)
+  
+#mutate(prof_val_mm_w_average = ifelse(prof_val_mm_w_average < 0, 0, prof_val_mm_w_average))
+
+
+
+library(MetBrewer)
+palette1 <- met.brewer("VanGogh1", 70, type = "continuous")  # Generate palette
+
+
+
+
+tm_shape(df_one_map, projection = 3347) +
+  tm_fill(
+    col = "prof_val_mm_w_average",
+    style = "quantile",  # Use continuous style to match continuous palette
+    palette = palette1,
+    title = "Legend Title",
+    lwd = 0.05  # This removes polygon borders
+  )+
+  tm_layout(frame = FALSE)  # removes map border/frame
+

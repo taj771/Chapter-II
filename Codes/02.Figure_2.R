@@ -362,11 +362,11 @@ p <- ggplot(df_profit, aes(x = factor(year), y = value,  fill = interaction(vari
   guides(fill = guide_legend(title = NULL)) +  # Remove legend title
   theme(
     legend.position = "bottom",  # Move the legend to the bottom
-    axis.text.x = element_text(size = 12),  # Adjust x-axis text size
-    axis.text.y = element_text(size = 12),  # Adjust y-axis text size
-    axis.title.x = element_text(size = 12),  # Adjust x-axis title size
-    axis.title.y = element_text(size = 12),   # Adjust y-axis title size
-    legend.text = element_text(size = 12),    # Adjust legend text size
+    axis.text.x = element_text(size = 18),  # Adjust x-axis text size
+    axis.text.y = element_text(size = 18),  # Adjust y-axis text size
+    axis.title.x = element_text(size = 18),  # Adjust x-axis title size
+    axis.title.y = element_text(size = 18),   # Adjust y-axis title size
+    legend.text = element_text(size = 18),    # Adjust legend text size
     axis.ticks = element_line(size = 0.8)
   ) 
 

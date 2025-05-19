@@ -127,12 +127,21 @@ return$price.bu <- adjust_for_inflation(price.bu, years, "CA", to_date = 2023)
 
 
 return_wheat <- return%>%
-  filter(crop =="wheat")
+  filter(crop =="wheat")%>%
+  mutate(dry_cost_ac_ave = mean(dry_cost_ac),
+         irri_cost_fix_ac = mean(irri_cost_fix_ac),
+         irri_cost_var_ac = mean(irri_cost_var_ac),
+         price.bu = mean(price.bu))
 
 return_canola <- return%>%
-  filter(crop =="canola")
+  filter(crop =="canola")%>%
+  mutate(dry_cost_ac_ave = mean(dry_cost_ac),
+         irri_cost_fix_ac = mean(irri_cost_fix_ac),
+         irri_cost_var_ac = mean(irri_cost_var_ac),
+         price.bu = mean(price.bu))
 
 wheat <- df_wheat%>%
+  mutate(crop = "wheat")%>%
   #filter(Year > 2014)%>%
   rename(year = Year)%>%
   mutate(irr_level_mm = irrq_m3/(0.001*4046.86))%>%
@@ -192,6 +201,13 @@ years <- return_potatao$year
 return_potatao$irri_cost_fix_ac <- adjust_for_inflation(irri_cost_fix_ac, years, "CA", to_date = 2023)
 return_potatao$irri_cost_var_ac <- adjust_for_inflation(irri_cost_var_ac, years, "CA", to_date = 2023)
 return_potatao$price.ton <- adjust_for_inflation(price.ton, years, "CA", to_date = 2023)
+
+
+return_potatao <- return_potatao %>%
+  mutate(dry_cost_ac_ave = mean(dry_cost_ac),
+         irri_cost_fix_ac = mean(irri_cost_fix_ac),
+         irri_cost_var_ac = mean(irri_cost_var_ac),
+         price.bu = mean(price.bu))
 
 potato <- rbind(potato_ir_2018, potato_ir_2019, potato_ir_2020, potato_ir_2021, potato_ir_2022, potato_ir_2023) %>%
   mutate(
@@ -349,7 +365,7 @@ df1 <- wheat_weighted%>%
   left_join(potato_weighted, by = c("Site", "year"))%>%
   mutate(reve_val_mm_w =reve_val_mm_wheat+reve_val_mm_canola+reve_val_mm_potato,
          prof_val_mm_w = prof_val_mm_wheat + prof_val_mm_canola+prof_val_mm_potato
-         )%>%
+  )%>%
   select(year,Site,reve_val_mm_w,prof_val_mm_w)
 
 
@@ -373,253 +389,64 @@ df_all <- wheat%>%
   left_join(df1)
 
 
-df_profit <- df_all%>%
-  select(Site,year,prof_val_mm_wheat,prof_val_mm_canola,prof_val_mm_potato,prof_val_mm_w)%>%
-  pivot_longer(cols = c(`prof_val_mm_wheat`, `prof_val_mm_canola`,prof_val_mm_potato,`prof_val_mm_w`), names_to = "variable", values_to = "value")
-  
-df_profit$variable <- factor(df_profit$variable, levels = c("prof_val_mm_wheat", "prof_val_mm_canola","prof_val_mm_potato","prof_val_mm_w"))
+weather_data_final <- read.csv("./AquaCropOPSyData/ClimateData/combined_daymet_weather_data.csv")%>%
+  select(site,longitude,latitude)%>%
+  distinct(site,.keep_all = T)
+
+df_sf <-   st_as_sf(weather_data_final, coords = c("longitude", "latitude"), crs = 4326)  # Use the appropriate CRS
+
+df_map_grids <- st_read("./maps/LakeDiefenbaker/MergeLakeDiefenbakerfishnet5Km.shp")
+
+# Ensure both are in the same CRS
+df_map_grids <- st_transform(df_map_grids, st_crs(df_sf))
 
 
-# Split datasets by crop
-wheat_plot <- df_profit %>% 
-  filter(variable == "prof_val_mm_wheat") %>%
-  ggplot(aes(x = factor(year), y = value, fill = variable)) +
-  geom_boxplot(notch = TRUE, width = 0.25) +
-  geom_hline(yintercept = 0, linetype = "dashed", color = "black", size = 0.6) +  # Add horizontal line at y = 0
-  labs(title = "Wheat", x = "Year", y = expression("Average Value ($m"^{-3}*")")) +
-  scale_fill_manual(values = c("prof_val_mm_wheat" = "springgreen4")) +
-  scale_x_discrete(expand = expansion(mult = c(0.08, 0.08))) +
-  scale_y_continuous(limits = c(-1.5, 2), breaks = seq(-1.5, 2, by = 0.5)) +
-  theme_minimal() +
-  theme(
-    legend.position = "none",
-    panel.grid.major = element_blank(),
-    panel.grid.minor = element_blank(),
-    axis.line = element_line(color = "black"),
-    text = element_text(size = 12),
-    axis.text.x = element_text(size = 12),
-    axis.text.y = element_text(size = 12),
-    axis.title.x = element_text(size = 12),
-    axis.title.y = element_text(size = 12),
-    axis.ticks = element_line(size = 0.8),
-    plot.title = element_text(hjust = 0.5, face = "bold")  # center and bold the title
+df_map_grids<- df_map_grids %>%
+  st_join(df_sf, join = st_intersects)
+
+df_map <- df_map_grids%>%
+  rename(Site=site)%>%
+  left_join(df_all)
+
+
+
+
+df_one_map <- df_map%>%
+  #filter(year %in% c(2018,2021,2023))%>%
+  group_by(Site)%>%
+  mutate(prof_val_mm_w_average = median(prof_val_mm_w))%>%
+  ungroup()%>%
+  select(Site,prof_val_mm_w_average)%>%
+  distinct(Site, .keep_all = T)%>%
+  drop_na()%>%
+  mutate(prof_val_mm_w_average = ifelse(prof_val_mm_w_average < 0, 0, prof_val_mm_w_average))
+
+
+
+st_write(df_one_map, "/Users/tharakajayalath/Library/CloudStorage/OneDrive-UniversityofSaskatchewan/Chapter II-IrrigationValue/Chapter-II/Data/shapefile/value_map.shp")
+
+
+library(MetBrewer)
+palette1 <- met.brewer("VanGogh1", 70, type = "continuous")  # Generate palette
+
+
+
+# Create the map and assign to a variable
+p <- tm_shape(df_one_map, projection = 3347) +
+  tm_fill(
+    col = "prof_val_mm_w_average",
+    palette = palette1,
+    title = "",  # no title
+    lwd = 0.05,
+    showNA = FALSE,
+    breaks = c(0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.8, 1)
+  ) +
+  tm_layout(
+    frame = FALSE,
+    legend.frame = FALSE,
+    legend.position = c("right", "bottom"),
+    legend.direction = "horizontal"
   )
 
-canola_plot <- df_profit %>% 
-  filter(variable == "prof_val_mm_canola") %>%
-  ggplot(aes(x = factor(year), y = value, fill = variable)) +
-  geom_boxplot(notch = TRUE, width = 0.25) +
-  geom_hline(yintercept = 0, linetype = "dashed", color = "black", size = 0.6) +  # Add horizontal line at y = 0
-  labs(title = "Canola", x = "Year", y = expression("Average Value ($m"^{-3}*")")) +
-  scale_fill_manual(values = c("prof_val_mm_canola" = "firebrick3")) +
-  scale_x_discrete(expand = expansion(mult = c(0.08, 0.08))) +
-  scale_y_continuous(limits = c(-1.5, 2), breaks = seq(-1.5, 2, by = 0.5)) +
-  theme_minimal() +
-  theme(
-    legend.position = "none",
-    panel.grid.major = element_blank(),
-    panel.grid.minor = element_blank(),
-    axis.line = element_line(color = "black"),
-    text = element_text(size = 12),
-    axis.text.x = element_text(size = 12),
-    axis.text.y = element_text(size = 12),
-    axis.title.x = element_text(size = 12),
-    axis.title.y = element_text(size = 12),
-    axis.ticks = element_line(size = 0.8),
-    plot.title = element_text(hjust = 0.5, face = "bold")  # center and bold the title
-  )
-
-
-
-potato_plot <- df_profit %>% 
-  filter(variable == "prof_val_mm_potato") %>%
-  ggplot(aes(x = factor(year), y = value, fill = variable)) +
-  geom_boxplot(notch = TRUE, width = 0.25) +
-  geom_hline(yintercept = 0, linetype = "dashed", color = "black", size = 0.6) +  # Add horizontal line at y = 0
-  labs(title = "Potato", x = "Year", y = expression("Average Value ($m"^{-3}*")")) +
-  scale_fill_manual(values = c("prof_val_mm_potato" = "goldenrod1")) +
-  scale_x_discrete(expand = expansion(mult = c(0.08, 0.08))) +
-  scale_y_continuous(limits = c(2, 8), breaks = seq(-2, 8, by = 0.5)) +
-  theme_minimal() +
-  theme(
-    legend.position = "none",
-    panel.grid.major = element_blank(),
-    panel.grid.minor = element_blank(),
-    axis.line = element_line(color = "black"),
-    text = element_text(size = 12),
-    axis.text.x = element_text(size = 12),
-    axis.text.y = element_text(size = 12),
-    axis.title.x = element_text(size = 12),
-    axis.title.y = element_text(size = 12),
-    axis.ticks = element_line(size = 0.8),
-    plot.title = element_text(hjust = 0.5, face = "bold")  # center and bold the title
-  )
-
-
-weighted_plot <- df_profit %>% 
-  filter(variable == "prof_val_mm_w") %>%
-  ggplot(aes(x = factor(year), y = value, fill = variable)) +
-  geom_boxplot(notch = TRUE, width = 0.25) +
-  geom_hline(yintercept = 0, linetype = "dashed", color = "black", size = 0.6) +  # Add horizontal line at y = 0
-  labs(title = "Weighted", x = "Year", y = expression("Average Value ($m"^{-3}*")")) +
-  scale_fill_manual(values = c("prof_val_mm_w" = "purple3")) +
-  scale_x_discrete(expand = expansion(mult = c(0.08, 0.08))) +
-  scale_y_continuous(limits = c(-1, 1), breaks = seq(-1, 1, by = 0.5)) +
-  theme_minimal() +
-  theme(
-    legend.position = "none",
-    panel.grid.major = element_blank(),
-    panel.grid.minor = element_blank(),
-    axis.line = element_line(color = "black"),
-    text = element_text(size = 12),
-    axis.text.x = element_text(size = 12),
-    axis.text.y = element_text(size = 12),
-    axis.title.x = element_text(size = 12),
-    axis.title.y = element_text(size = 12),
-    axis.ticks = element_line(size = 0.8),
-    plot.title = element_text(hjust = 0.5, face = "bold")  # center and bold the title
-  )
-
-
-
-# Combine all plots
-p <- (wheat_plot | canola_plot) / (potato_plot | weighted_plot)
-
-
-ggsave("./results/images/AverageValue_Profit.png", plot = p, width = 10, height = 7, dpi = 300)
-
-
-
-stop()
-###################################################################################################################################
-###################################################################################################################################
-p <- ggplot(df_profit, aes(x = factor(year), y = value,  fill = interaction(variable))) +
-  geom_boxplot(notch = TRUE, width = 0.25, position = position_dodge(0.5),outlier.size = 0.4) +
-  labs(x = "Year", y = "Value (mm)", title = "Irrigation & Precipitation for Wheat & Canola by Year") +
-  theme_minimal()+
-  scale_fill_manual(values = c("springgreen4", "firebrick3","goldenrod1", "purple3"),
-                    labels = c("Wheat","Canola","Potato", "Weighted")) +
-  theme(legend.position = "top") +
-  labs(
-    title = "",
-    x = "Year",
-    y = expression("Average Value ($m"^{-3}*")"),
-    fill = "Crop Type"
-  ) +  
-  theme_minimal() +
-  theme(
-    text = element_text(size = 12),
-    legend.position = "right"
-  ) +
-  scale_x_discrete(expand = expansion(mult = c(0.08, 0.08))) + # Adjust gap between x-axis labels (year)
-  theme_minimal() +
-  theme(panel.grid.major = element_blank(),  # Remove major grid lines
-        panel.grid.minor = element_blank(),
-        axis.line = element_line(color = "black")) +
-  scale_y_continuous(
-                     limits = c(-0.5, 4), breaks = seq(-2, 4, by = 0.5)) + # Customize y-axis scale
-  guides(fill = guide_legend(title = NULL)) +  # Remove legend title
-  theme(
-    legend.position = "bottom",  # Move the legend to the bottom
-    axis.text.x = element_text(size = 12),  # Adjust x-axis text size
-    axis.text.y = element_text(size = 12),  # Adjust y-axis text size
-    axis.title.x = element_text(size = 12),  # Adjust x-axis title size
-    axis.title.y = element_text(size = 12),   # Adjust y-axis title size
-    legend.text = element_text(size = 12),    # Adjust legend text size
-    axis.ticks = element_line(size = 0.8)
-  ) 
-
-
-ggsave("./results/images/AverageValue_Profit.png", plot = p, width = 10, height = 7, dpi = 300)
-
-
-################################################################################
-### Two x axis grapg since potato has high level of average value
-
-# Scale potato values down for plotting
-df_profit <- df_profit %>%
-  mutate(scaled_value = ifelse(grepl("potato", variable), value / 10, value))
-
-p <- ggplot(df_profit, aes(x = factor(year), y = scaled_value, fill = variable)) +
-  geom_boxplot(notch = TRUE, width = 0.25, position = position_dodge(0.5), outlier.size = 0.4) +
-  scale_fill_manual(
-    values = c("springgreen4", "firebrick3", "goldenrod1", "purple3"),
-    labels = c("Wheat", "Canola", "Potato", "Weighted")
-  ) +
-  labs(
-    x = "Year",
-    y = expression("Average Value ($m"^{-3}*") [Wheat/Canola/Weighted]"),
-    fill = "Crop Type"
-  ) +
-  scale_y_continuous(
-    limits = c(-0.5, 1.5), 
-    breaks = seq(-0.5, 1.5, 0.5),
-    sec.axis = sec_axis(~ . * 10, name = expression("Average Value ($m"^{-3}*") [Potato]"))
-  ) +
-  theme_minimal() +
-  theme(
-    panel.grid.major = element_blank(),
-    panel.grid.minor = element_blank(),
-    axis.line = element_line(color = "black"),
-    text = element_text(size = 12),
-    axis.text = element_text(size = 12),
-    axis.title = element_text(size = 12),
-    axis.ticks = element_line(size = 0.8),
-    legend.position = "bottom",
-    legend.text = element_text(size = 12),
-    axis.text.x = element_text(size = 12),
-    axis.text.y = element_text(size = 12)
-  ) +
-  guides(fill = guide_legend(title = NULL)) +
-  scale_x_discrete(expand = expansion(mult = c(0.08, 0.08)))
-
-
-ggsave("./results/images/AverageValue_twoaxis_Profit.png", plot = p, width = 10, height = 7, dpi = 300)
-
-
-
-df_profit <- df_all%>%
-  select(Site,year,prof_val_mm_wheat,prof_val_mm_canola,prof_val_mm_w)%>%
-  pivot_longer(cols = c(`prof_val_mm_wheat`, `prof_val_mm_canola`,`prof_val_mm_w`), names_to = "variable", values_to = "value")
-
-df_profit$variable <- factor(df_profit$variable, levels = c("prof_val_mm_wheat", "prof_val_mm_canola","prof_val_mm_w"))
-
-
-p <- ggplot(df_profit, aes(x = factor(year), y = value,  fill = interaction(variable))) +
-  geom_boxplot(notch = TRUE, width = 0.25, position = position_dodge(0.5),outlier.size = 0.4) +
-  labs(x = "Year", y = "Value (mm)", title = "Irrigation & Precipitation for Wheat & Canola by Year") +
-  theme_minimal()+
-  scale_fill_manual(values = c("springgreen4", "firebrick3", "purple3"),
-                    labels = c("Wheat","Canola", "Weighted")) +
-  theme(legend.position = "top") +
-  labs(
-    title = "",
-    x = "Year",
-    y = expression("Average Value ($m"^{-3}*")"),
-    fill = "Crop Type"
-  ) +  
-  theme_minimal() +
-  theme(
-    text = element_text(size = 12),
-    legend.position = "right"
-  ) +
-  scale_x_discrete(expand = expansion(mult = c(0.08, 0.08))) + # Adjust gap between x-axis labels (year)
-  theme_minimal() +
-  theme(panel.grid.major = element_blank(),  # Remove major grid lines
-        panel.grid.minor = element_blank(),
-        axis.line = element_line(color = "black")) +
-  scale_y_continuous(
-                     limits = c(-1.5, 1.5), breaks = seq(-2, 2, by = 0.5)) + # Customize y-axis scale
-  guides(fill = guide_legend(title = NULL)) +  # Remove legend title
-  theme(
-    legend.position = "bottom",  # Move the legend to the bottom
-    axis.text.x = element_text(size = 18),  # Adjust x-axis text size
-    axis.text.y = element_text(size = 18),  # Adjust y-axis text size
-    axis.title.x = element_text(size = 18),  # Adjust x-axis title size
-    axis.title.y = element_text(size = 18),   # Adjust y-axis title size
-    legend.text = element_text(size = 18),    # Adjust legend text size
-    axis.ticks = element_line(size = 0.8)
-  ) 
-
-ggsave("./results/images/AverageValue_Profit.png", plot = p, width = 10, height = 7, dpi = 300)
-
+# Save to PNG
+tmap_save(p, filename = "./results/images/AverageValue_profit_map.png", width = 10, height = 7, dpi = 300)

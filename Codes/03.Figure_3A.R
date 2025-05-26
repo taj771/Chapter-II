@@ -423,11 +423,11 @@ df_one_map <- df_map%>%
 
 
 
-st_write(df_one_map, "/Users/tharakajayalath/Library/CloudStorage/OneDrive-UniversityofSaskatchewan/Chapter II-IrrigationValue/Chapter-II/Data/shapefile/value_map.shp")
+#st_write(df_one_map, "/Users/tharakajayalath/Library/CloudStorage/OneDrive-UniversityofSaskatchewan/Chapter II-IrrigationValue/Chapter-II/Data/shapefile/value_map.shp")
 
 
 library(MetBrewer)
-palette1 <- met.brewer("VanGogh1", 70, type = "continuous")  # Generate palette
+palette1 <- met.brewer("Hokusai2", 70, type = "continuous")  # Generate palette
 
 
 
@@ -436,7 +436,7 @@ p <- tm_shape(df_one_map, projection = 3347) +
   tm_fill(
     col = "prof_val_mm_w_average",
     palette = palette1,
-    title = "",  # no title
+    title = "Average Value ($ per m\u00b3)",  # no title
     lwd = 0.05,
     showNA = FALSE,
     breaks = c(0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.8, 1)
@@ -444,9 +444,12 @@ p <- tm_shape(df_one_map, projection = 3347) +
   tm_layout(
     frame = FALSE,
     legend.frame = FALSE,
-    legend.position = c("right", "bottom"),
+    legend.position = c(0.85,0.45), 
     legend.direction = "horizontal"
-  )
+  )+
+  tm_compass(type = "arrow", position = c(1.1, 1), size = 2) +
+  tm_scale_bar(position = c(-0.3, 0.1))
+  
 
 # Save to PNG
 tmap_save(p, filename = "./results/images/AverageValue_profit_map.png", width = 10, height = 7, dpi = 300)

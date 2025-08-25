@@ -1,3 +1,6 @@
+# Figure 7: Net economic benefits (%) of flexible allocation of irrigation water
+
+
 #clear memory
 rm(list = ls())
 

@@ -1,3 +1,11 @@
+# Figure 2 Cumulative precipitation and irrigation demand during the crop cycle for
+# wheat, canola, and potato across 397 fields (2018–2023)
+
+library(tidyverse)
+library(ggplot2)
+library(priceR)
+
+
 #clear memory
 rm(list = ls())
 

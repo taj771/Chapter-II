@@ -1,3 +1,7 @@
+# Figure 8: Net economic benefits (%) of flexible irrigation water allocation under a 20%
+# reduction in projected daily precipitation from 2030 to 2050.
+
+
 #clear memory
 rm(list = ls())
 

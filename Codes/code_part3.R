@@ -1,3 +1,6 @@
+# Figure 3: Average shadow price of a cubic meter of irrigation water from 2018 to 2023.
+
+
 #clear memory
 rm(list = ls())
 
@@ -481,6 +484,7 @@ weighted_plot <- df_profit %>%
   )
 
 
+library(patchwork)
 
 # Combine all plots
 p <- (wheat_plot | canola_plot) / (potato_plot | weighted_plot)

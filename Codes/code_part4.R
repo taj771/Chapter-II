@@ -1,5 +1,11 @@
+# Figure 4: Spatial variation in the average weighted shadow price of irrigation water.
+
+
 #clear memory
 rm(list = ls())
+
+library(sf)
+library(tmap)
 
 #### Rain-fed #### Rain-fed #### Rain-fed #### Rain-fed #### Rain-fed #### Rain-fed #### Rain-fed
 

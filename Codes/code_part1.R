@@ -1,3 +1,6 @@
+# Code part 1 - Download Daymet data across the study area from 2018-2023 and
+# Create weathe data file for AquaCrop-OS
+
 #clear memory
 rm(list = ls())
 
@@ -108,7 +111,7 @@ library(readr)
 # Read the CSV file
 # Load longitude and latitude data from a CSV file
 locations <- read.csv("./maps/LakeDiefenbaker/MergeLakeDiefenbakerfishnet5Kmpoints.csv")%>%
-  select(grid_id, lat, lon)%>%
+  dplyr::select(grid_id, lat, lon)%>%
   rename("site" = "grid_id")
 
 

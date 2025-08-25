@@ -1,3 +1,6 @@
+# Figure 5: Marginal value of irrigation water (m−3) at different irrigation levels for A) Wheat, B) Canola, and C) Potato.
+
+
 #clear memory
 rm(list = ls())
 
@@ -430,3 +433,6 @@ library(patchwork)
 p1 + p2 + p3 + 
   plot_layout(ncol = 1, heights = c(1, 1, 1)) + 
   plot_annotation(tag_levels = 'A') 
+
+
+

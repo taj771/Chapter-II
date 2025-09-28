@@ -2864,6 +2864,41 @@ p <- ggplot(df1, aes(x = year, y = ner_benefit_per, fill = type)) +
   )
 
 
+df1 <- df_all%>%
+  select(year,type,ner_benefit_per)%>%
+  mutate(type = ifelse(type == "wheat-Canola", "Crop Rotation: Wheat & Canola", type))%>%
+  mutate(type = ifelse(type == "wheat-canola-potato", "Crop Rotation: Wheat, Canola & Potato", type))
+
+
+
+p <- ggplot(df1, aes(x = factor(year), y = ner_benefit_per)) +
+  geom_bar(stat = "identity", fill = "maroon", width = 0.3) +
+  facet_wrap(~ type, nrow = 1, scales = "fixed") +
+  labs(x = "Year", y = "Net Economic Benefits (%)", title = "") +
+  theme_minimal() +
+  theme(
+    strip.text = element_text(size = 12, face = "bold"),
+    axis.text.x = element_text(angle = 45, hjust = 1),
+    axis.line = element_line(color = "black"),
+    axis.title = element_text(size = 12),
+    axis.text = element_text(size = 12),
+    legend.position = "",
+    legend.box = "",
+    panel.grid.major = element_blank(),  # Remove all major grid lines
+    panel.grid.minor = element_blank(),  # Remove all minor grid lines
+    axis.text.y = element_text(size = 12),
+    axis.title.x = element_text(size = 12),
+    axis.title.y = element_text(size = 12),
+    legend.text = element_text(size = 12),
+    legend.title = element_text(size = 12, face = "plain"),
+    axis.ticks = element_line(size = 0.8),
+    legend.key.size = unit(0.4, "cm"),
+    panel.border = element_rect(color = "lightgrey", fill = NA, size = 0.8),  # visible border
+    
+  )+
+  scale_y_continuous(breaks = seq(0, 30, by = 5), limits = c(0, 30), expand = c(0, 0)) 
+  
+
 
 ggsave("./results/images/reallocationBenefits.png", plot = p, width = 10, height = 7, dpi = 300)
 

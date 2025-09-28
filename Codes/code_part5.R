@@ -6,7 +6,7 @@ rm(list = ls())
 
 ## crop return - crop budget data ## crop return - crop budget data 
 
-return <- read.csv("./AquaCropOPSyData/CropReturn/CropReturnDarkBrown.csv")
+return <- read.csv("./Data Main Analysis/CropReturnDarkBrown.csv")
 
 
 dry_cost_ac <- return$dry_cost_ac
@@ -30,17 +30,17 @@ return_canola <- return%>%
 
 ### Wheat  ### Wheat ### Wheat  ### Wheat ### Wheat  ### Wheat ### Wheat  ### Wheat 
 
-wheat_ir_2018 <- read_csv('./AquaCropOPSyData/WheatMarginal/merged_simulation_results_wheat_marginal_2018_irrigation.csv')%>%
+wheat_ir_2018 <- read_csv('./Data Main Analysis/merged_simulation_results_wheat_marginal_2018_irrigation.csv')%>%
   mutate(year=2018)
-wheat_ir_2019 <- read_csv('./AquaCropOPSyData/WheatMarginal/merged_simulation_results_wheat_marginal_2019_irrigation.csv')%>%
+wheat_ir_2019 <- read_csv('./Data Main Analysis/merged_simulation_results_wheat_marginal_2019_irrigation.csv')%>%
   mutate(year=2019)
-wheat_ir_2020 <- read_csv('./AquaCropOPSyData/WheatMarginal/merged_simulation_results_wheat_marginal_2020_irrigation.csv')%>%
+wheat_ir_2020 <- read_csv('./Data Main Analysis/merged_simulation_results_wheat_marginal_2020_irrigation.csv')%>%
   mutate(year=2020) 
-wheat_ir_2021 <- read_csv('./AquaCropOPSyData/WheatMarginal/merged_simulation_results_wheat_marginal_2021_irrigation.csv')%>%
+wheat_ir_2021 <- read_csv('./Data Main Analysis/merged_simulation_results_wheat_marginal_2021_irrigation.csv')%>%
   mutate(year=2021)
-wheat_ir_2022 <- read_csv('./AquaCropOPSyData/WheatMarginal/merged_simulation_results_wheat_marginal_2022_irrigation.csv')%>%
+wheat_ir_2022 <- read_csv('./Data Main Analysis/merged_simulation_results_wheat_marginal_2022_irrigation.csv')%>%
   mutate(year=2022)
-wheat_ir_2023 <- read_csv('./AquaCropOPSyData/WheatMarginal/merged_simulation_results_wheat_marginal_2023_irrigation.csv')%>%
+wheat_ir_2023 <- read_csv('./Data Main Analysis/merged_simulation_results_wheat_marginal_2023_irrigation.csv')%>%
   mutate(year=2023)
 
 df_wheat_ir <- rbind(wheat_ir_2018,wheat_ir_2019,wheat_ir_2020,wheat_ir_2021,wheat_ir_2022,wheat_ir_2023)
@@ -64,12 +64,12 @@ df_wheat_ir <- df_wheat_ir%>%
   select(year,Site_ID,Max_Irrigation_mm,irr_level_mm,irrq_m3,return_ir,profit_ir,`Dry yield (bu/ac)`)
 
 
-df_wheat_0_irri_2018 <- read_csv('./AquaCropOPSyData/WheatRainfed/wheat_rainfed_2018.csv')
-df_wheat_0_irri_2019 <- read_csv('./AquaCropOPSyData/WheatRainfed/wheat_rainfed_2019.csv')
-df_wheat_0_irri_2020 <- read_csv('./AquaCropOPSyData/WheatRainfed/wheat_rainfed_2020.csv')
-df_wheat_0_irri_2021 <- read_csv('./AquaCropOPSyData/WheatRainfed/wheat_rainfed_2021.csv')
-df_wheat_0_irri_2022 <- read_csv('./AquaCropOPSyData/WheatRainfed/wheat_rainfed_2022.csv')
-df_wheat_0_irri_2023 <- read_csv('./AquaCropOPSyData/WheatRainfed/wheat_rainfed_2023.csv')
+df_wheat_0_irri_2018 <- read_csv('./Data Main Analysis/wheat_rainfed_2018.csv')
+df_wheat_0_irri_2019 <- read_csv('./Data Main Analysis/wheat_rainfed_2019.csv')
+df_wheat_0_irri_2020 <- read_csv('./Data Main Analysis/wheat_rainfed_2020.csv')
+df_wheat_0_irri_2021 <- read_csv('./Data Main Analysis/wheat_rainfed_2021.csv')
+df_wheat_0_irri_2022 <- read_csv('./Data Main Analysis/wheat_rainfed_2022.csv')
+df_wheat_0_irri_2023 <- read_csv('./Data Main Analysis/wheat_rainfed_2023.csv')
 
 df_wheat_0_irri <- rbind(df_wheat_0_irri_2018,df_wheat_0_irri_2019,df_wheat_0_irri_2020,df_wheat_0_irri_2021,df_wheat_0_irri_2022)
 
@@ -172,15 +172,15 @@ smooth_data <- p_build$data[[1]]  # The first element corresponds to geom_smooth
 
 ### canola  ### canola ### canola  ### canola ### canola  ### canola ### canola  ### canola 
 
-canola_ir_2018 <- read_csv('./AquaCropOPSyData/canolaMarginal/merged_simulation_results_canola_marginal_2018_irrigation.csv')%>%
+canola_ir_2018 <- read_csv('./Data Main Analysis/merged_simulation_results_canola_marginal_2018_irrigation.csv')%>%
   mutate(year=2018)
-canola_ir_2019 <- read_csv('./AquaCropOPSyData/canolaMarginal/merged_simulation_results_canola_marginal_2019_irrigation.csv')%>%
+canola_ir_2019 <- read_csv('./Data Main Analysis/merged_simulation_results_canola_marginal_2019_irrigation.csv')%>%
   mutate(year=2019)
-canola_ir_2020 <- read_csv('./AquaCropOPSyData/canolaMarginal/merged_simulation_results_canola_marginal_2020_irrigation.csv')%>%
+canola_ir_2020 <- read_csv('./Data Main Analysis/merged_simulation_results_canola_marginal_2020_irrigation.csv')%>%
   mutate(year=2020) 
-canola_ir_2021 <- read_csv('./AquaCropOPSyData/canolaMarginal/merged_simulation_results_canola_marginal_2021_irrigation.csv')%>%
+canola_ir_2021 <- read_csv('./Data Main Analysis/merged_simulation_results_canola_marginal_2021_irrigation.csv')%>%
   mutate(year=2021)
-canola_ir_2022 <- read_csv('./AquaCropOPSyData/canolaMarginal/merged_simulation_results_canola_marginal_2022_irrigation.csv')%>%
+canola_ir_2022 <- read_csv('./Data Main Analysis/merged_simulation_results_canola_marginal_2022_irrigation.csv')%>%
   mutate(year=2022)
 #canola_ir_2023 <- read_csv('./AquaCropOPSyData/canolaMarginal/merged_simulation_results_canola_marginal_2023_irrigation.csv')%>%
 #mutate(year=2018)
@@ -206,11 +206,11 @@ df_canola_ir <- df_canola_ir%>%
   select(year, Site_ID,Max_Irrigation_mm,irr_level_mm,irrq_m3,return_ir,profit_ir,`Dry yield (bu/ac)`)
 
 
-df_canola_0_irri_2018 <- read_csv('./AquaCropOPSyData/canolaRainfed/canola_rainfed_2018.csv')
-df_canola_0_irri_2019 <- read_csv('./AquaCropOPSyData/canolaRainfed/canola_rainfed_2019.csv')
-df_canola_0_irri_2020 <- read_csv('./AquaCropOPSyData/canolaRainfed/canola_rainfed_2020.csv')
-df_canola_0_irri_2021 <- read_csv('./AquaCropOPSyData/canolaRainfed/canola_rainfed_2021.csv')
-df_canola_0_irri_2022 <- read_csv('./AquaCropOPSyData/canolaRainfed/canola_rainfed_2022.csv')
+df_canola_0_irri_2018 <- read_csv('./Data Main Analysis/canola_rainfed_2018.csv')
+df_canola_0_irri_2019 <- read_csv('./Data Main Analysis/canola_rainfed_2019.csv')
+df_canola_0_irri_2020 <- read_csv('./Data Main Analysis/canola_rainfed_2020.csv')
+df_canola_0_irri_2021 <- read_csv('./Data Main Analysis/canola_rainfed_2021.csv')
+df_canola_0_irri_2022 <- read_csv('./Data Main Analysis/canola_rainfed_2022.csv')
 #df_canola_0_irri_2023 <- read_csv('./AquaCropOPSyData/canolaRainfed/canola_rainfed_2023.csv')
 
 df_canola_0_irri <- rbind(df_canola_0_irri_2018,df_canola_0_irri_2019,df_canola_0_irri_2020,df_canola_0_irri_2021,df_canola_0_irri_2022)
@@ -316,17 +316,17 @@ smooth_data <- p_build$data[[1]]  # The first element corresponds to geom_smooth
 ### Potato ### Potato ### Potato ### Potato ### Potato ### Potato 
 
 
-potato_ir_2018 <- read_csv('./AquaCropOPSyData/PotataoMarginal/merged_simulation_results_Potato_marginal_2018_irrigation.csv')%>%
+potato_ir_2018 <- read_csv('./Data Main Analysis/merged_simulation_results_Potato_marginal_2018_irrigation.csv')%>%
   mutate(year=2018)
-potato_ir_2019 <- read_csv('./AquaCropOPSyData/PotataoMarginal/merged_simulation_results_Potato_marginal_2019_irrigation.csv')%>%
+potato_ir_2019 <- read_csv('./Data Main Analysis/merged_simulation_results_Potato_marginal_2019_irrigation.csv')%>%
   mutate(year=2019)
-potato_ir_2020 <- read_csv('./AquaCropOPSyData/PotataoMarginal/merged_simulation_results_Potato_marginal_2020_irrigation.csv')%>%
+potato_ir_2020 <- read_csv('./Data Main Analysis/merged_simulation_results_Potato_marginal_2020_irrigation.csv')%>%
   mutate(year=2020) 
-potato_ir_2021 <- read_csv('./AquaCropOPSyData/PotataoMarginal/merged_simulation_results_Potato_marginal_2021_irrigation.csv')%>%
+potato_ir_2021 <- read_csv('./Data Main Analysis/merged_simulation_results_Potato_marginal_2021_irrigation.csv')%>%
   mutate(year=2021)
-potato_ir_2022 <- read_csv('./AquaCropOPSyData/PotataoMarginal/merged_simulation_results_Potato_marginal_2022_irrigation.csv')%>%
+potato_ir_2022 <- read_csv('./Data Main Analysis/merged_simulation_results_Potato_marginal_2022_irrigation.csv')%>%
   mutate(year=2022)
-potato_ir_2023 <- read_csv('./AquaCropOPSyData/PotataoMarginal/merged_simulation_results_Potato_marginal_2023_irrigation.csv')%>%
+potato_ir_2023 <- read_csv('./Data Main Analysis/merged_simulation_results_Potato_marginal_2023_irrigation.csv')%>%
   mutate(year=2023)
 
 

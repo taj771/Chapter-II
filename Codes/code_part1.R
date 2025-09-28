@@ -15,7 +15,7 @@ library(tidyverse)
 library(dplyr)
 
 # Load the shapefile
-shapefile <- st_read("./maps/LakeDiefenbaker/MergeLakeDiefenbaker.shp")
+shapefile <- st_read("./Data Main Analysis/shapefiles/MergeLakeDiefenbaker.shp")
 
 # Fix invalid geometries in the shapefile
 shapefile <- st_make_valid(shapefile)
@@ -59,7 +59,7 @@ plot(st_geometry(shapefile), col = "lightblue", border = "darkblue", main = "Sha
 plot(st_geometry(fishnet_clipped), add = TRUE, col = NA, border = "red")
 
 # Optionally save the fishnet grid as a shapefile
-st_write(fishnet_clipped, "./maps/LakeDiefenbaker/MergeLakeDiefenbakerfishnet5Km.shp", delete_dsn = T)
+st_write(fishnet_clipped, "./Data Main Analysis/shapefiles/MergeLakeDiefenbakerfishnet5Km.shp", delete_dsn = T)
 
 
 
@@ -84,13 +84,13 @@ grid_points_wgs84 <- data.frame(
 )
 
 
-write_csv(grid_points_wgs84, "./maps/LakeDiefenbaker/MergeLakeDiefenbakerfishnet5Kmpoints.csv")
+write_csv(grid_points_wgs84, "./Data Main Analysis/shapefiles/MergeLakeDiefenbakerfishnet5Kmpoints.csv")
 
 
 # Convert to sf object (assuming 'longitude' and 'latitude' columns exist)
 grid_points_sf <- st_as_sf(grid_points_wgs84, coords = c("lon", "lat"), crs = 4326)
 
-st_write(grid_points_sf, "./maps/LakeDiefenbaker/MergeLakeDiefenbakerfishnet5Kmpoints.shp", delete_dsn = T)
+st_write(grid_points_sf, "./Data Main Analysis/shapefiles/MergeLakeDiefenbakerfishnet5Kmpoints.shp", delete_dsn = T)
 
 
 ###################### Daymet ##########################
@@ -182,6 +182,8 @@ weather_data_final <- all_weather_data%>%
 
 #write csv
 write.csv(weather_data_final, "./AquaCropOPSyData/ClimateData/weather_data_Aqua.csv", row.names = FALSE)
+write.csv(weather_data_final, "./Data Main Analysis/weather_data_Aqua.csv", row.names = FALSE)
+
 
 
 ################################################################################

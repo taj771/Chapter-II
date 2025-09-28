@@ -6,12 +6,12 @@ rm(list = ls())
 
 #### Rain-fed #### Rain-fed #### Rain-fed #### Rain-fed #### Rain-fed #### Rain-fed #### Rain-fed
 
-wheat_rf_2018 <- read_csv('./AquaCropOPSyData/WheatRainfed/wheat_rainfed_2018.csv')
-wheat_rf_2019 <- read_csv('./AquaCropOPSyData/WheatRainfed/wheat_rainfed_2019.csv')
-wheat_rf_2020 <- read_csv('./AquaCropOPSyData/WheatRainfed/wheat_rainfed_2020.csv') 
-wheat_rf_2021 <- read_csv('./AquaCropOPSyData/WheatRainfed/wheat_rainfed_2021.csv')
-wheat_rf_2022 <- read_csv('./AquaCropOPSyData/WheatRainfed/wheat_rainfed_2022.csv')
-wheat_rf_2023 <- read_csv('./AquaCropOPSyData/WheatRainfed/wheat_rainfed_2023.csv')
+wheat_rf_2018 <- read_csv('./Data Main Analysis/wheat_rainfed_2018.csv')
+wheat_rf_2019 <- read_csv('./Data Main Analysis/wheat_rainfed_2019.csv')
+wheat_rf_2020 <- read_csv('./Data Main Analysis/wheat_rainfed_2020.csv') 
+wheat_rf_2021 <- read_csv('./Data Main Analysis/wheat_rainfed_2021.csv')
+wheat_rf_2022 <- read_csv('./Data Main Analysis/wheat_rainfed_2022.csv')
+wheat_rf_2023 <- read_csv('./Data Main Analysis/wheat_rainfed_2023.csv')
 
 df_wheat_rf <- rbind(wheat_rf_2018, wheat_rf_2019, wheat_rf_2020, wheat_rf_2021, wheat_rf_2022, wheat_rf_2023) %>%
   mutate(
@@ -29,12 +29,12 @@ df_wheat_rf <- rbind(wheat_rf_2018, wheat_rf_2019, wheat_rf_2020, wheat_rf_2021,
   select(Year, `Dry yield rain (bu/ac)`, Site)
 
 
-canola_rf_2018 <- read_csv('./AquaCropOPSyData/canolaRainfed/canola_rainfed_2018.csv')
-canola_rf_2019 <- read_csv('./AquaCropOPSyData/canolaRainfed/canola_rainfed_2019.csv')
-canola_rf_2020 <- read_csv('./AquaCropOPSyData/canolaRainfed/canola_rainfed_2020.csv') 
-canola_rf_2021 <- read_csv('./AquaCropOPSyData/canolaRainfed/canola_rainfed_2021.csv')
-canola_rf_2022 <- read_csv('./AquaCropOPSyData/canolaRainfed/canola_rainfed_2022.csv')
-canola_rf_2023 <- read_csv('./AquaCropOPSyData/canolaRainfed/canola_rainfed_2023.csv')
+canola_rf_2018 <- read_csv('./Data Main Analysis/canola_rainfed_2018.csv')
+canola_rf_2019 <- read_csv('./Data Main Analysis/canola_rainfed_2019.csv')
+canola_rf_2020 <- read_csv('./Data Main Analysis/canola_rainfed_2020.csv') 
+canola_rf_2021 <- read_csv('./Data Main Analysis/canola_rainfed_2021.csv')
+canola_rf_2022 <- read_csv('./Data Main Analysis/canola_rainfed_2022.csv')
+canola_rf_2023 <- read_csv('./Data Main Analysis/canola_rainfed_2023.csv')
 
 df_canola_rf <- rbind(canola_rf_2018,canola_rf_2019,canola_rf_2020,canola_rf_2021,canola_rf_2022,canola_rf_2023)%>%
   mutate(
@@ -54,12 +54,12 @@ df_canola_rf <- rbind(canola_rf_2018,canola_rf_2019,canola_rf_2020,canola_rf_202
 ### irrigation ### irrigation ### irrigation ### irrigation ### irrigation ### irrigation
 
 
-wheat_ir_2018 <- read_csv('./AquaCropOPSyData/WheatNetIrriDeamad/wheat_netirridemand_2018.csv')
-wheat_ir_2019 <- read_csv('./AquaCropOPSyData/WheatNetIrriDeamad/wheat_netirridemand_2019.csv')
-wheat_ir_2020 <- read_csv('./AquaCropOPSyData/WheatNetIrriDeamad/wheat_netirridemand_2020.csv') 
-wheat_ir_2021 <- read_csv('./AquaCropOPSyData/WheatNetIrriDeamad/wheat_netirridemand_2021.csv')
-wheat_ir_2022 <- read_csv('./AquaCropOPSyData/WheatNetIrriDeamad/wheat_netirridemand_2022.csv')
-wheat_ir_2023 <- read_csv('./AquaCropOPSyData/WheatNetIrriDeamad/wheat_netirridemand_2023.csv')
+wheat_ir_2018 <- read_csv('./Data Main Analysis/wheat_netirridemand_2018.csv')
+wheat_ir_2019 <- read_csv('./Data Main Analysis/wheat_netirridemand_2019.csv')
+wheat_ir_2020 <- read_csv('./Data Main Analysis/wheat_netirridemand_2020.csv') 
+wheat_ir_2021 <- read_csv('./Data Main Analysis/wheat_netirridemand_2021.csv')
+wheat_ir_2022 <- read_csv('./Data Main Analysis/wheat_netirridemand_2022.csv')
+wheat_ir_2023 <- read_csv('./Data Main Analysis/wheat_netirridemand_2023.csv')
 
 df_wheat_ir <- rbind(wheat_ir_2018, wheat_ir_2019, wheat_ir_2020, wheat_ir_2021, wheat_ir_2022, wheat_ir_2023) %>%
   mutate(
@@ -78,12 +78,12 @@ df_wheat_ir <- rbind(wheat_ir_2018, wheat_ir_2019, wheat_ir_2020, wheat_ir_2021,
   select(Year, `Dry yield irri (bu/ac)`,irrq_m3,  Site)
 
 
-canola_ir_2018 <- read_csv('./AquaCropOPSyData/canolaNetIrriDeamad/canola_netirridemand_2018.csv')
-canola_ir_2019 <- read_csv('./AquaCropOPSyData/canolaNetIrriDeamad/canola_netirridemand_2019.csv')
-canola_ir_2020 <- read_csv('./AquaCropOPSyData/canolaNetIrriDeamad/canola_netirridemand_2020.csv') 
-canola_ir_2021 <- read_csv('./AquaCropOPSyData/canolaNetIrriDeamad/canola_netirridemand_2021.csv')
-canola_ir_2022 <- read_csv('./AquaCropOPSyData/canolaNetIrriDeamad/canola_netirridemand_2022.csv')
-canola_ir_2023 <- read_csv('./AquaCropOPSyData/canolaNetIrriDeamad/canola_netirridemand_2023.csv')
+canola_ir_2018 <- read_csv('./Data Main Analysis/canola_netirridemand_2018.csv')
+canola_ir_2019 <- read_csv('./Data Main Analysis/canola_netirridemand_2019.csv')
+canola_ir_2020 <- read_csv('./Data Main Analysis/canola_netirridemand_2020.csv') 
+canola_ir_2021 <- read_csv('./Data Main Analysis/canola_netirridemand_2021.csv')
+canola_ir_2022 <- read_csv('./Data Main Analysis/canola_netirridemand_2022.csv')
+canola_ir_2023 <- read_csv('./Data Main Analysis/canola_netirridemand_2023.csv')
 
 df_canola_ir <- rbind(canola_ir_2018, canola_ir_2019, canola_ir_2020, canola_ir_2021, canola_ir_2022, canola_ir_2023) %>%
   mutate(
@@ -113,7 +113,7 @@ df_canola <- df_canola_rf%>%
 
 ## crop return - crop budget data ## crop return - crop budget data 
 
-return <- read.csv("./AquaCropOPSyData/CropReturn/CropReturnDarkBrown.csv")
+return <- read.csv("./Data Main Analysis/CropReturnDarkBrown.csv")
 
 
 dry_cost_ac <- return$dry_cost_ac
@@ -175,16 +175,16 @@ canola <- df_canola%>%
   select(year, Site,reve_val_mm,prof_val_mm)
 
 
-potato_ir_2018 <- read_csv('AquaCropOPSyData/PotatoNetIrriDemand/potato_netirridemand_2018.csv')
-potato_ir_2019 <- read_csv('AquaCropOPSyData/PotatoNetIrriDemand/potato_netirridemand_2019.csv')
-potato_ir_2020 <- read_csv('AquaCropOPSyData/PotatoNetIrriDemand/potato_netirridemand_2020.csv') 
-potato_ir_2021 <- read_csv('AquaCropOPSyData/PotatoNetIrriDemand/potato_netirridemand_2021.csv')
-potato_ir_2022 <- read_csv('AquaCropOPSyData/PotatoNetIrriDemand/potato_netirridemand_2022.csv')
-potato_ir_2023 <- read_csv('AquaCropOPSyData/PotatoNetIrriDemand/potato_netirridemand_2023.csv')
+potato_ir_2018 <- read_csv('./Data Main Analysis/potato_netirridemand_2018.csv')
+potato_ir_2019 <- read_csv('./Data Main Analysis/potato_netirridemand_2019.csv')
+potato_ir_2020 <- read_csv('./Data Main Analysis/potato_netirridemand_2020.csv') 
+potato_ir_2021 <- read_csv('./Data Main Analysis/potato_netirridemand_2021.csv')
+potato_ir_2022 <- read_csv('./Data Main Analysis/potato_netirridemand_2022.csv')
+potato_ir_2023 <- read_csv('./Data Main Analysis/potato_netirridemand_2023.csv')
 
 
 
-return_potatao <- read.csv("./AquaCropOPSyData/CropReturn/CropReturnPotato.csv")
+return_potatao <- read.csv("./Data Main Analysis/CropReturnPotato.csv")
 
 
 irri_cost_fix_ac <- return_potatao$irri_cost_fix_ac

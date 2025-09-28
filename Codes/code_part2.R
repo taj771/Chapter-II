@@ -9,113 +9,115 @@ library(priceR)
 #clear memory
 rm(list = ls())
 
-climate_data <- read_csv('./AquaCropOPSyData/ClimateData/weather_data_Aqua.csv')
+#climate_data <- read_csv('./AquaCropOPSyData/ClimateData/weather_data_Aqua.csv')
+climate_data <- read_csv('./Data Main Analysis/weather_data_Aqua.csv')
 
-wheat_2018 <- read_csv('./AquaCropOPSyData/WheatNetIrriDeamad/wheat_netirridemand_2018.csv')%>%
+
+wheat_2018 <- read_csv('./Data Main Analysis/wheat_netirridemand_2018.csv')%>%
   mutate(Year = 2018)%>%
   select(Site,Year,`Total_Precipitation(mm)`,`Seasonal irrigation (mm)`)%>%
   pivot_longer(cols = c(`Seasonal irrigation (mm)`, `Total_Precipitation(mm)`), names_to = "variable", values_to = "value")%>%
   mutate(crop = "wheat")
 
-wheat_2019 <- read_csv('./AquaCropOPSyData/WheatNetIrriDeamad/wheat_netirridemand_2019.csv')%>%
+wheat_2019 <- read_csv('./Data Main Analysis/wheat_netirridemand_2019.csv')%>%
   mutate(Year = 2019)%>%
   select(Site,Year,`Total_Precipitation(mm)`,`Seasonal irrigation (mm)`)%>%
   pivot_longer(cols = c(`Seasonal irrigation (mm)`, `Total_Precipitation(mm)`), names_to = "variable", values_to = "value")%>%
   mutate(crop = "wheat")
 
-wheat_2020 <- read_csv('./AquaCropOPSyData/WheatNetIrriDeamad/wheat_netirridemand_2020.csv')%>%
+wheat_2020 <- read_csv('./Data Main Analysis/wheat_netirridemand_2020.csv')%>%
   mutate(Year = 2020)%>%
   select(Site,Year,`Total_Precipitation(mm)`,`Seasonal irrigation (mm)`)%>%
   pivot_longer(cols = c(`Seasonal irrigation (mm)`, `Total_Precipitation(mm)`), names_to = "variable", values_to = "value")%>%
   mutate(crop = "wheat")
 
-wheat_2021 <- read_csv('./AquaCropOPSyData/WheatNetIrriDeamad/wheat_netirridemand_2021.csv')%>%
+wheat_2021 <- read_csv('./Data Main Analysis/wheat_netirridemand_2021.csv')%>%
   mutate(Year = 2021)%>%
   select(Site,Year,`Total_Precipitation(mm)`,`Seasonal irrigation (mm)`)%>%
   pivot_longer(cols = c(`Seasonal irrigation (mm)`, `Total_Precipitation(mm)`), names_to = "variable", values_to = "value")%>%
   mutate(crop = "wheat")
 
-wheat_2022 <- read_csv('./AquaCropOPSyData/WheatNetIrriDeamad/wheat_netirridemand_2022.csv')%>%
+wheat_2022 <- read_csv('./Data Main Analysis/wheat_netirridemand_2022.csv')%>%
   mutate(Year = 2022)%>%
   select(Site,Year,`Total_Precipitation(mm)`,`Seasonal irrigation (mm)`)%>%
   pivot_longer(cols = c(`Seasonal irrigation (mm)`, `Total_Precipitation(mm)`), names_to = "variable", values_to = "value")%>%
   mutate(crop = "wheat")
 
-wheat_2023 <- read_csv('./AquaCropOPSyData/WheatNetIrriDeamad/wheat_netirridemand_2023.csv')%>%
+wheat_2023 <- read_csv('./Data Main Analysis/wheat_netirridemand_2023.csv')%>%
   mutate(Year = 2023)%>%
   select(Site,Year,`Total_Precipitation(mm)`,`Seasonal irrigation (mm)`)%>%
   pivot_longer(cols = c(`Seasonal irrigation (mm)`, `Total_Precipitation(mm)`), names_to = "variable", values_to = "value")%>%
   mutate(crop = "wheat")
 
 
-canola_2018 <- read_csv('./AquaCropOPSyData/canolaNetIrriDeamad/canola_netirridemand_2018.csv')%>%
+canola_2018 <- read_csv('./Data Main Analysis/canola_netirridemand_2018.csv')%>%
   mutate(Year = 2018)%>%
   select(Site,Year,`Seasonal irrigation (mm)`)%>%
   pivot_longer(cols = c(`Seasonal irrigation (mm)`), names_to = "variable", values_to = "value")%>%
   mutate(crop = "canola")
 
-canola_2019 <- read_csv('./AquaCropOPSyData/canolaNetIrriDeamad/canola_netirridemand_2019.csv')%>%
+canola_2019 <- read_csv('./Data Main Analysis/canola_netirridemand_2019.csv')%>%
   mutate(Year = 2019)%>%
   select(Site,Year,`Seasonal irrigation (mm)`)%>%
   pivot_longer(cols = c(`Seasonal irrigation (mm)`), names_to = "variable", values_to = "value")%>%
   mutate(crop = "canola")
 
-canola_2020 <- read_csv('./AquaCropOPSyData/canolaNetIrriDeamad/canola_netirridemand_2020.csv')%>%
+canola_2020 <- read_csv('./Data Main Analysis/canola_netirridemand_2020.csv')%>%
   mutate(Year = 2020)%>%
   select(Site,Year,`Seasonal irrigation (mm)`)%>%
   pivot_longer(cols = c(`Seasonal irrigation (mm)`), names_to = "variable", values_to = "value")%>%
   mutate(crop = "canola")
 
-canola_2021 <- read_csv('./AquaCropOPSyData/canolaNetIrriDeamad/canola_netirridemand_2021.csv')%>%
+canola_2021 <- read_csv('./Data Main Analysis/canola_netirridemand_2021.csv')%>%
   mutate(Year = 2021)%>%
   select(Site,Year,`Seasonal irrigation (mm)`)%>%
   pivot_longer(cols = c(`Seasonal irrigation (mm)`), names_to = "variable", values_to = "value")%>%
   mutate(crop = "canola")
 
-canola_2022 <- read_csv('./AquaCropOPSyData/canolaNetIrriDeamad/canola_netirridemand_2022.csv')%>%
+canola_2022 <- read_csv('./Data Main Analysis/canola_netirridemand_2022.csv')%>%
   mutate(Year = 2022)%>%
   select(Site,Year,`Seasonal irrigation (mm)`)%>%
   pivot_longer(cols = c(`Seasonal irrigation (mm)`), names_to = "variable", values_to = "value")%>%
   mutate(crop = "canola")
 
-canola_2023 <- read_csv('./AquaCropOPSyData/canolaNetIrriDeamad/canola_netirridemand_2023.csv')%>%
+canola_2023 <- read_csv('./Data Main Analysis/canola_netirridemand_2023.csv')%>%
   mutate(Year = 2023)%>%
   select(Site,Year,,`Seasonal irrigation (mm)`)%>%
   pivot_longer(cols = c(`Seasonal irrigation (mm)`), names_to = "variable", values_to = "value")%>%
   mutate(crop = "canola")
 
 
-potato_2018 <- read_csv('AquaCropOPSyData/PotatoNetIrriDemand/potato_netirridemand_2018.csv')%>%
+potato_2018 <- read_csv('./Data Main Analysis/potato_netirridemand_2018.csv')%>%
   mutate(Year = 2018)%>%
   select(Site,Year,`Seasonal irrigation (mm)`)%>%
   pivot_longer(cols = c(`Seasonal irrigation (mm)`), names_to = "variable", values_to = "value")%>%
   mutate(crop = "potato")
 
-potato_2019 <- read_csv('AquaCropOPSyData/PotatoNetIrriDemand/potato_netirridemand_2019.csv')%>%
+potato_2019 <- read_csv('./Data Main Analysis/potato_netirridemand_2019.csv')%>%
   mutate(Year = 2019)%>%
   select(Site,Year,`Seasonal irrigation (mm)`)%>%
   pivot_longer(cols = c(`Seasonal irrigation (mm)`), names_to = "variable", values_to = "value")%>%
   mutate(crop = "potato")
 
-potato_2020 <- read_csv('AquaCropOPSyData/PotatoNetIrriDemand/potato_netirridemand_2020.csv')%>%
+potato_2020 <- read_csv('./Data Main Analysis/potato_netirridemand_2020.csv')%>%
   mutate(Year = 2020)%>%
   select(Site,Year,`Seasonal irrigation (mm)`)%>%
   pivot_longer(cols = c(`Seasonal irrigation (mm)`), names_to = "variable", values_to = "value")%>%
   mutate(crop = "potato")
 
-potato_2021 <- read_csv('AquaCropOPSyData/PotatoNetIrriDemand/potato_netirridemand_2021.csv')%>%
+potato_2021 <- read_csv('./Data Main Analysis/potato_netirridemand_2021.csv')%>%
   mutate(Year = 2021)%>%
   select(Site,Year,`Seasonal irrigation (mm)`)%>%
   pivot_longer(cols = c(`Seasonal irrigation (mm)`), names_to = "variable", values_to = "value")%>%
   mutate(crop = "potato")
 
-potato_2022 <- read_csv('AquaCropOPSyData/PotatoNetIrriDemand/potato_netirridemand_2022.csv')%>%
+potato_2022 <- read_csv('./Data Main Analysis/potato_netirridemand_2022.csv')%>%
   mutate(Year = 2022)%>%
   select(Site,Year,`Seasonal irrigation (mm)`)%>%
   pivot_longer(cols = c(`Seasonal irrigation (mm)`), names_to = "variable", values_to = "value")%>%
   mutate(crop = "potato")
 
-potato_2023 <- read_csv('AquaCropOPSyData/PotatoNetIrriDemand/potato_netirridemand_2023.csv')%>%
+potato_2023 <- read_csv('./Data Main Analysis/potato_netirridemand_2023.csv')%>%
   mutate(Year = 2023)%>%
   select(Site,Year,`Seasonal irrigation (mm)`)%>%
   pivot_longer(cols = c(`Seasonal irrigation (mm)`), names_to = "variable", values_to = "value")%>%

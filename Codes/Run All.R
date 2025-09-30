@@ -1,5 +1,15 @@
 # Chapter II - The Economic Value of Irrigation Water under Policy and Environmental Changes
 
+# Load sf package for spatial operations
+library(sf)
+library(tidyverse)
+library(dplyr)
+library(ggplot2)
+library(priceR)
+library(tmap)
+
+
+
 # Step 1 
 #Download weather data from Daymet series and create Weather data file for AquaCrop
 source("./codes/code_part1.R")
@@ -7,21 +17,25 @@ source("./codes/code_part1.R")
 # Step 2 simulation crop production fucntion using AquaCrop-OS
 # Python Code available at the folder named AquaCrop.py
 # Wheat Average - No limits on irrigation Q
-# 01.Wheat Average.py
+# AquaCrop-OS-part 1.ipynb
 # Canola Average - No limits on irrigation Q
-# 02.Canola Average.py
+# AquaCrop-OS-part 2.ipynb
 # Potato Average - No limits on irrigation Q
-# 03.Potato Average.py
+# AquaCrop-OS-part 3.ipynb
 # Wheat Marginal - Controlled iriigation
-# 04.Wheat Marginal.py
+# AquaCrop-OS-part 4.ipynb
 # Canola Marginal - Controlled iriigation
-# 05.Canola Marginal.py
+# AquaCrop-OS-part 5.ipynb
 # Potato Marginal - Controlled iriigation
-# 06.Potatao Marginal.py
+# AquaCrop-OS-part 6.ipynb
 # Crop proudction simulation under climate chenge scenario CMIP245-controlled irrigation
-# 12. Climate_chnage_CMIP245_PrcpRed.py
+# AquaCrop-OS-part 7.py
 
 # Manuscript Tables and Figures
+
+# Figure 1 Lake Diefenbaker irrigation development area
+source("./codes/code_part01.R")
+
 # Figure 2 Cumulative precipitation and irrigation demand during the crop cycle for
 # wheat, canola, and potato across 397 fields (2018–2023)
 source("./codes/code_part2.R")

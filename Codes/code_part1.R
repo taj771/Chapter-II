@@ -4,16 +4,6 @@
 #clear memory
 rm(list = ls())
 
-# Load required packages
-if (!require(sf)) {
-  install.packages("sf")
-}
-
-# Load sf package for spatial operations
-library(sf)
-library(tidyverse)
-library(dplyr)
-
 # Load the shapefile
 shapefile <- st_read("./Data Main Analysis/shapefiles/MergeLakeDiefenbaker.shp")
 

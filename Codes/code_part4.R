@@ -131,14 +131,14 @@ return$price.bu <- adjust_for_inflation(price.bu, years, "CA", to_date = 2023)
 
 return_wheat <- return%>%
   filter(crop =="wheat")%>%
-  mutate(dry_cost_ac_ave = mean(dry_cost_ac),
+  mutate(dry_cost_ac = mean(dry_cost_ac),
          irri_cost_fix_ac = mean(irri_cost_fix_ac),
          irri_cost_var_ac = mean(irri_cost_var_ac),
          price.bu = mean(price.bu))
 
 return_canola <- return%>%
   filter(crop =="canola")%>%
-  mutate(dry_cost_ac_ave = mean(dry_cost_ac),
+  mutate(dry_cost_ac = mean(dry_cost_ac),
          irri_cost_fix_ac = mean(irri_cost_fix_ac),
          irri_cost_var_ac = mean(irri_cost_var_ac),
          price.bu = mean(price.bu))
@@ -206,11 +206,10 @@ return_potatao$irri_cost_var_ac <- adjust_for_inflation(irri_cost_var_ac, years,
 return_potatao$price.ton <- adjust_for_inflation(price.ton, years, "CA", to_date = 2023)
 
 
-return_potatao <- return_potatao %>%
-  mutate(dry_cost_ac_ave = mean(dry_cost_ac),
-         irri_cost_fix_ac = mean(irri_cost_fix_ac),
+return_potatao <- return_potatao%>%
+  mutate(irri_cost_fix_ac = mean(irri_cost_fix_ac),
          irri_cost_var_ac = mean(irri_cost_var_ac),
-         price.bu = mean(price.bu))
+         price.ton = mean(price.ton))
 
 potato <- rbind(potato_ir_2018, potato_ir_2019, potato_ir_2020, potato_ir_2021, potato_ir_2022, potato_ir_2023) %>%
   mutate(
@@ -223,6 +222,8 @@ potato <- rbind(potato_ir_2018, potato_ir_2019, potato_ir_2020, potato_ir_2021, 
   ) %>%
   mutate(irrq_m3 = 4046.86*(`Seasonal irrigation (mm)`*0.001))%>%
   select(year, `Dry yield (ton/ac)`,irrq_m3,  Site)%>%
+  
+  left_join(return_potatao)%>%
   
   
   mutate(irr_level_mm = irrq_m3 / (0.001 * 4046.86),

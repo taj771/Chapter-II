@@ -1,0 +1,1516 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.5.57">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Simulation of Crop production function using AquaCrop-OSPy</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="AquaCrop_Readme_files/libs/clipboard/clipboard.min.js"></script>
+<script src="AquaCrop_Readme_files/libs/quarto-html/quarto.js"></script>
+<script src="AquaCrop_Readme_files/libs/quarto-html/popper.min.js"></script>
+<script src="AquaCrop_Readme_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="AquaCrop_Readme_files/libs/quarto-html/anchor.min.js"></script>
+<link href="AquaCrop_Readme_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="AquaCrop_Readme_files/libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="AquaCrop_Readme_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="AquaCrop_Readme_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="AquaCrop_Readme_files/libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+</head>
+
+<body class="fullcontent">
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Simulation of Crop production function using AquaCrop-OSPy</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p>This README file provides users with an overview of how we use AquaCrop-OSPy—an open-source Python implementation of the U.N. Food and Agriculture Organization (FAO) AquaCrop model—to simulate crop production functions in the Lake Diefenbaker area</p>
+<p>Please note that these codes are designed to run in a Python environment. Ensure that you have a Python setup in place and that all required packages are installed before importing them.</p>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>Using virtual environment '/Users/tharakajayalath/.virtualenvs/r-reticulate' ...</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># !pip install git+https://github.com/aquacropos/aquacrop</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="co"># from google.colab import output</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="co"># output.clear()</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Now that AquaCrop is installed, we need to import its components into the environment.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> aquacrop <span class="im">import</span> AquaCropModel, Soil, Crop, InitialWaterContent, FieldMngt, GroundWater</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> aquacrop.utils <span class="im">import</span> prepare_weather, get_filepath</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> seaborn <span class="im">as</span> sns</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Running an AquaCrop-OSPy model requires selecting five key components:</p>
+<ol type="1">
+<li>Daily climate measurements</li>
+<li>Soil selection</li>
+<li>Crop selection</li>
+<li>Initial water content</li>
+<li>Simulation start and end dates</li>
+</ol>
+<p><strong>1. Climate measurements</strong></p>
+<p>AquaCrop-OSPy requires weather data for the cropping period being simulated. This includes a daily time series of minimum and maximum temperatures (°C), precipitation (mm), and reference crop evapotranspiration (ET₀, mm).</p>
+<p><strong>2. Soil</strong></p>
+<p>Selecting a soil type for an AquaCrop-OSPy simulation is done via the Soil object. This object contains all the compositional and hydraulic properties required for the model. The simplest way to choose a soil is to use one of the built-in soil types provided in AquaCrop defaults. Users can modify any of these built-in soil types or create their own custom soil profiles.</p>
+<p><strong>3. Crop</strong></p>
+<p>The crop type used in the simulation is selected in a similar way via the Crop object. To define a crop, you must specify the crop type and planting date. Any of the built-in crop types (currently Maize, Wheat, Rice, and Potato) can be selected or user can define crop parameters. Users may also edit the built-in crop parameters or create custom crop definitions.</p>
+<p>Broadly these crop parameters are divide into two categories:</p>
+<p>a). Conservative parameters</p>
+<p>b). Non-conservative parameters - Needs to calibrate based on local conditions</p>
+<p><strong>4. Initial water content</strong></p>
+<p>The initial soil-water content at the beginning of the simulation is specified using the <em>InitialWaterContent</em> object.</p>
+<p><strong>5. Simulation start and end dates</strong></p>
+<p>You must define the simulation’s start and end dates (YYYY/MM/DD). These determine the period over which AquaCrop-OSPy will run.</p>
+<p><strong>Running the simulation</strong></p>
+<p>Additional model components may also be specified, including irrigation management, field management, groundwater conditions. Once you have defined the weather data, crop, soil, and initial water content, you are ready to run the simulation. To run the model, combine all components into an AquaCropModel object. This is also where you specify the simulation start and end dates.</p>
+<p><strong>AquaCrop-OSPy Simulation Configuration to Simulate Crop Yield–Water Relationship for Lake Diefenbaker</strong></p>
+<p>Now that you have a basic understanding of how AquaCrop-OSPy works, I will walk you through a real example in which we simulate the crop production function for wheat using the actual data employed in our manuscript. In our simulation setup for the Lake Diefenbaker region, as used in the manuscript, there are a few details that need to be clarified.</p>
+<p>a). In our case we simulate 394 sampling sites not only 1 site</p>
+<p>b). We simulate crop production during 2018 - 2023</p>
+<p>First, I will explain the simulation settings for revealing the crop yield–water relationship, which we later use to estimate the average value of irrigation water. Here, we calculate the average value as:</p>
+<p><span class="math display">\[\begin{equation}
+
+{AV_{itj}} =     \sum_{j=1}^{n} \frac{(Y^{IR}_{itj} -Y^{RF}_{itj})*P_{it}-(C^{IR}_{it}-C^{RF}_{it})}{IRWQ_{itj}}
+\label{equation1}
+\end{equation}\]</span></p>
+<p>Where;</p>
+<p><span class="math inline">\(AV_{ijt}=\)</span> Average value of unit of irrigation water used in <span class="math inline">\(j^{th}\)</span> field for <span class="math inline">\(i^{th}\)</span> crop during the <span class="math inline">\(t^{th}\)</span> year</p>
+<p><span class="math inline">\(Y^{IR}_{itj}=\)</span> Yield from <span class="math inline">\(i^{th}\)</span> crop in year <span class="math inline">\(t\)</span> at the <span class="math inline">\(j^{th}\)</span> field with net irrigation demand</p>
+<p><span class="math inline">\(Y^{RF}_{itj}=\)</span> Yield from <span class="math inline">\(i^{th}\)</span> crop in year <span class="math inline">\(t\)</span> at the <span class="math inline">\(j^{th}\)</span> field under rain-fed</p>
+<p><span class="math inline">\(P_{it}\)</span> = <span class="math inline">\(i^{th}\)</span> Crop price during <span class="math inline">\(t^{th}\)</span> year</p>
+<p><span class="math inline">\(C^{IR}_{it},C^{RF}_{it}=\)</span> Operational cost of <span class="math inline">\(i^{th}\)</span> crop under irrigated and rain-fed production system during year <span class="math inline">\(t^{th}\)</span> respectively</p>
+<p><span class="math inline">\(IRWQ_{itj}=\)</span> Total amount of irrigation water used in <span class="math inline">\(i^{th}\)</span> crop at <span class="math inline">\(j^{th}\)</span> site during the <span class="math inline">\(t^{th}\)</span> year</p>
+<p>Here, the aim of the AquaCrop simulation is to model crop yields for wheat under rain-fed conditions, as well as under irrigated conditions, and to estimate the net irrigation requirement needed to achieve their maximum potential yield.</p>
+<p><strong>Simulation Configuration 1</strong></p>
+<p>Here, I am referring to our first simulation configuration, where we simulate the crop production function under rainfed conditions. The following illustrative code is for the simulation of wheat production, and later I will discuss which parameters need to be changed for different crops.</p>
+<p><strong>Step 1:</strong></p>
+<p>Developing the weather data file in our case requires an additional step because the Daymet and CMIP weather data files do not include ET₀. Therefore, we need to calculate ET₀ based on the available weather variables from the original file and then create the weather data file accordingly. Each step in the code includes a note to help you understand the process easily.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> os</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="co"># --- Paths ---</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Working directory</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>cwd <span class="op">=</span> os.getcwd()</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Current working directory: </span><span class="sc">{</span>cwd<span class="sc">}</span><span class="ss">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Current working directory: /Users/tharakajayalath/Library/CloudStorage/OneDrive-UniversityofSaskatchewan/Chapter II-IrrigationValue/Chapter-II/Codes</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Output directory</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>output_dir <span class="op">=</span> os.path.join(cwd, <span class="st">'AquaCropReadme'</span>)</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>os.makedirs(output_dir, exist_ok<span class="op">=</span><span class="va">True</span>)  <span class="co"># Create directory if it doesn't exist</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Input file path</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>input_file <span class="op">=</span> <span class="st">'/Users/tharakajayalath/Library/CloudStorage/OneDrive-UniversityofSaskatchewan/Chapter II-IrrigationValue/Chapter-II/AquaCropOPSyData/ClimateData/weather_data_Aqua.csv'</span></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Output file path</span></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>output_file <span class="op">=</span> os.path.join(output_dir, <span class="st">'daymet_data_with_et0.csv'</span>)</span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a><span class="co"># --- Load Daymet data ---</span></span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>climate_data <span class="op">=</span> pd.read_csv(input_file, on_bad_lines<span class="op">=</span><span class="st">'skip'</span>)</span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a><span class="co"># --- Check Date column and process ---</span></span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> <span class="st">'Date'</span> <span class="kw">in</span> climate_data.columns:</span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a>    climate_data[<span class="st">'Date'</span>] <span class="op">=</span> pd.to_datetime(climate_data[<span class="st">'Date'</span>], errors<span class="op">=</span><span class="st">'coerce'</span>)</span>
+<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a>    climate_data <span class="op">=</span> climate_data.dropna(subset<span class="op">=</span>[<span class="st">'Date'</span>])</span>
+<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Extract Day, Month, Year</span></span>
+<span id="cb6-20"><a href="#cb6-20" aria-hidden="true" tabindex="-1"></a>    climate_data[<span class="st">'Day'</span>] <span class="op">=</span> climate_data[<span class="st">'Date'</span>].dt.day</span>
+<span id="cb6-21"><a href="#cb6-21" aria-hidden="true" tabindex="-1"></a>    climate_data[<span class="st">'Month'</span>] <span class="op">=</span> climate_data[<span class="st">'Date'</span>].dt.month</span>
+<span id="cb6-22"><a href="#cb6-22" aria-hidden="true" tabindex="-1"></a>    climate_data[<span class="st">'Year'</span>] <span class="op">=</span> climate_data[<span class="st">'Date'</span>].dt.year</span>
+<span id="cb6-23"><a href="#cb6-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-24"><a href="#cb6-24" aria-hidden="true" tabindex="-1"></a>    <span class="co"># --- Calculate ET0 ---</span></span>
+<span id="cb6-25"><a href="#cb6-25" aria-hidden="true" tabindex="-1"></a>    T_max <span class="op">=</span> climate_data[<span class="st">'MaxTemp'</span>]</span>
+<span id="cb6-26"><a href="#cb6-26" aria-hidden="true" tabindex="-1"></a>    T_min <span class="op">=</span> climate_data[<span class="st">'MinTemp'</span>]</span>
+<span id="cb6-27"><a href="#cb6-27" aria-hidden="true" tabindex="-1"></a>    precipitation <span class="op">=</span> climate_data[<span class="st">'Precipitation'</span>]</span>
+<span id="cb6-28"><a href="#cb6-28" aria-hidden="true" tabindex="-1"></a>    solar_radiation <span class="op">=</span> climate_data[<span class="st">'R_n'</span>]</span>
+<span id="cb6-29"><a href="#cb6-29" aria-hidden="true" tabindex="-1"></a>    e_a <span class="op">=</span> climate_data[<span class="st">'e_a'</span>]</span>
+<span id="cb6-30"><a href="#cb6-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-31"><a href="#cb6-31" aria-hidden="true" tabindex="-1"></a>    T_mean <span class="op">=</span> (T_max <span class="op">+</span> T_min) <span class="op">/</span> <span class="dv">2</span></span>
+<span id="cb6-32"><a href="#cb6-32" aria-hidden="true" tabindex="-1"></a>    e_s <span class="op">=</span> <span class="fl">0.6108</span> <span class="op">*</span> np.exp((<span class="fl">17.27</span> <span class="op">*</span> T_mean) <span class="op">/</span> (T_mean <span class="op">+</span> <span class="fl">237.3</span>))</span>
+<span id="cb6-33"><a href="#cb6-33" aria-hidden="true" tabindex="-1"></a>    R_n <span class="op">=</span> solar_radiation</span>
+<span id="cb6-34"><a href="#cb6-34" aria-hidden="true" tabindex="-1"></a>    G <span class="op">=</span> <span class="dv">0</span></span>
+<span id="cb6-35"><a href="#cb6-35" aria-hidden="true" tabindex="-1"></a>    gamma <span class="op">=</span> <span class="fl">0.066</span></span>
+<span id="cb6-36"><a href="#cb6-36" aria-hidden="true" tabindex="-1"></a>    u <span class="op">=</span> <span class="fl">1.2</span></span>
+<span id="cb6-37"><a href="#cb6-37" aria-hidden="true" tabindex="-1"></a>    delta <span class="op">=</span> (<span class="dv">4098</span> <span class="op">*</span> e_s) <span class="op">/</span> ((T_mean <span class="op">+</span> <span class="fl">237.3</span>) <span class="op">**</span> <span class="dv">2</span>)</span>
+<span id="cb6-38"><a href="#cb6-38" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-39"><a href="#cb6-39" aria-hidden="true" tabindex="-1"></a>    ReferenceET <span class="op">=</span> (<span class="fl">0.408</span> <span class="op">*</span> delta <span class="op">*</span> (R_n <span class="op">-</span> G) <span class="op">+</span> gamma <span class="op">*</span> (<span class="dv">900</span> <span class="op">/</span> (T_mean <span class="op">+</span> <span class="dv">273</span>)) <span class="op">*</span> u <span class="op">*</span> (e_s <span class="op">-</span> e_a)) <span class="op">/</span> (delta <span class="op">+</span> gamma <span class="op">*</span> (<span class="dv">1</span> <span class="op">+</span> <span class="fl">0.34</span> <span class="op">*</span> u))</span>
+<span id="cb6-40"><a href="#cb6-40" aria-hidden="true" tabindex="-1"></a>    climate_data[<span class="st">'ReferenceET'</span>] <span class="op">=</span> ReferenceET</span>
+<span id="cb6-41"><a href="#cb6-41" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-42"><a href="#cb6-42" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Reorder columns</span></span>
+<span id="cb6-43"><a href="#cb6-43" aria-hidden="true" tabindex="-1"></a>    cols <span class="op">=</span> [<span class="st">'Day'</span>, <span class="st">'Month'</span>, <span class="st">'Year'</span>] <span class="op">+</span> [col <span class="cf">for</span> col <span class="kw">in</span> climate_data.columns <span class="cf">if</span> col <span class="kw">not</span> <span class="kw">in</span> [<span class="st">'Day'</span>, <span class="st">'Month'</span>, <span class="st">'Year'</span>]]</span>
+<span id="cb6-44"><a href="#cb6-44" aria-hidden="true" tabindex="-1"></a>    climate_data <span class="op">=</span> climate_data[cols]</span>
+<span id="cb6-45"><a href="#cb6-45" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-46"><a href="#cb6-46" aria-hidden="true" tabindex="-1"></a>    <span class="co"># --- Save CSV safely ---</span></span>
+<span id="cb6-47"><a href="#cb6-47" aria-hidden="true" tabindex="-1"></a>    climate_data.to_csv(output_file, index<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb6-48"><a href="#cb6-48" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"Reference ET₀ calculated and saved successfully to: </span><span class="sc">{</span>output_file<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb6-49"><a href="#cb6-49" aria-hidden="true" tabindex="-1"></a><span class="cf">else</span>:</span>
+<span id="cb6-50"><a href="#cb6-50" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="st">"Error: 'Date' column does not exist in the dataset."</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Reference ET₀ calculated and saved successfully to: /Users/tharakajayalath/Library/CloudStorage/OneDrive-UniversityofSaskatchewan/Chapter II-IrrigationValue/Chapter-II/Codes/AquaCropReadme/daymet_data_with_et0.csv</code></pre>
+</div>
+</div>
+<p><strong>Step 2</strong></p>
+<p>Run the AquaCrop-OSPy model for wheat across 394 sample sites within the study area for the year 2018.</p>
+<p>A few points need to be highlighted: for wheat, we use the AquaCrop-defined conservative parameters and rely on published papers from semi-arid regions to update the non-conservative parameters.</p>
+<p>Please refer to the following code chunk to see how crop parameters are handled using the Crop object. A complete list of crop parameters and their descriptions is provided in the Appendix.</p>
+<p>Also, note that we have controlled the irr_mngt object. For rain-fed conditions (no irrigation), we set it as:</p>
+<p>irr_mngt = IrrigationManagement(irrigation_method=0)</p>
+<p>For simulations under irrigation, we set it as:</p>
+<p>irr_mngt = IrrigationManagement(irrigation_method=4, NetIrrSMT=70)</p>
+<p>There are a few other potential irrigation setups, and the full list is included in the Appendix.</p>
+<p>Additional steps include looping the code across all 394 sites, recording results for each site separately, and finally aggregating the subset of simulated files for each site.</p>
+<p>Here is the full code, and I have added some notes within it to explain the aim of each code chunk.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co">###2018-RAIN-FED##018-RAIN-FED###018-RAIN-FED###018-RAIN-FED###018-RAIN-FED###018-RAIN-FED</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> os</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> aquacrop <span class="im">import</span> AquaCropModel, Soil, Crop, InitialWaterContent, IrrigationManagement</span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> aquacrop.utils <span class="im">import</span> prepare_weather</span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a><span class="co"># --- Paths ---</span></span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>cwd <span class="op">=</span> os.getcwd()</span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Current working directory: </span><span class="sc">{</span>cwd<span class="sc">}</span><span class="ss">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Input weather data with ET0</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>input_file <span class="op">=</span> <span class="st">'./AquaCropReadme/daymet_data_with_et0.csv'</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Directories for weather files and simulation outputs</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>weather_dir <span class="op">=</span> os.path.join(cwd, <span class="st">"ClimateData"</span>)</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>sim_output_dir <span class="op">=</span> os.path.join(cwd, <span class="st">"SimulationResults"</span>)</span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>os.makedirs(weather_dir, exist_ok<span class="op">=</span><span class="va">True</span>)<span class="op">;</span></span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>os.makedirs(sim_output_dir, exist_ok<span class="op">=</span><span class="va">True</span>)<span class="op">;</span></span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Directory to save merged results</span></span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a>merged_dir <span class="op">=</span> os.path.join(cwd, <span class="st">"AquaCropOPSyData/WheatRainfed"</span>)</span>
+<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a>os.makedirs(merged_dir, exist_ok<span class="op">=</span><span class="va">True</span>)<span class="op">;</span></span>
+<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a>merged_output_file <span class="op">=</span> os.path.join(merged_dir, <span class="st">"wheat_rainfed_2018.csv"</span>)</span>
+<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-16"><a href="#cb9-16" aria-hidden="true" tabindex="-1"></a><span class="co"># --- Load data ---</span></span>
+<span id="cb9-17"><a href="#cb9-17" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.read_csv(input_file)</span>
+<span id="cb9-18"><a href="#cb9-18" aria-hidden="true" tabindex="-1"></a>unique_sites <span class="op">=</span> df[<span class="st">'site'</span>].unique()</span>
+<span id="cb9-19"><a href="#cb9-19" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Total unique sites: </span><span class="sc">{</span><span class="bu">len</span>(unique_sites)<span class="sc">}</span><span class="ss">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># --- Simulation dates ---</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>sim_start <span class="op">=</span> <span class="st">'2018/01/01'</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>sim_end <span class="op">=</span> <span class="st">'2018/12/30'</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a><span class="co"># --- Loop through sites ---</span></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>all_simulation_results <span class="op">=</span> []</span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> site <span class="kw">in</span> unique_sites:</span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Filter data for site and year 2018</span></span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>    df_filtered <span class="op">=</span> (df[df[<span class="st">'site'</span>] <span class="op">==</span> site]</span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>                   .loc[:, [<span class="st">'Day'</span>,<span class="st">'Month'</span>,<span class="st">'Year'</span>,<span class="st">'MinTemp'</span>,<span class="st">'MaxTemp'</span>,<span class="st">'Precipitation'</span>,<span class="st">'ReferenceET'</span>]]</span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a>                   .rename(columns<span class="op">=</span>{</span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a>                       <span class="st">'MinTemp'</span>: <span class="st">'Tmin(c)'</span>,</span>
+<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a>                       <span class="st">'MaxTemp'</span>: <span class="st">'Tmax(c)'</span>,</span>
+<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a>                       <span class="st">'Precipitation'</span>: <span class="st">'Prcp(mm)'</span>,</span>
+<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a>                       <span class="st">'ReferenceET'</span>: <span class="st">'Et0(mm)'</span></span>
+<span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a>                   })</span>
+<span id="cb10-18"><a href="#cb10-18" aria-hidden="true" tabindex="-1"></a>                   .query(<span class="st">"Year == 2018"</span>))</span>
+<span id="cb10-19"><a href="#cb10-19" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb10-20"><a href="#cb10-20" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> df_filtered.empty:</span>
+<span id="cb10-21"><a href="#cb10-21" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="ss">f"No data for site </span><span class="sc">{</span>site<span class="sc">}</span><span class="ss"> in 2018. Skipping."</span>)</span>
+<span id="cb10-22"><a href="#cb10-22" aria-hidden="true" tabindex="-1"></a>        <span class="cf">continue</span></span>
+<span id="cb10-23"><a href="#cb10-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-24"><a href="#cb10-24" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Calculate total precipitation during growing period (May 1 - Oct 30)</span></span>
+<span id="cb10-25"><a href="#cb10-25" aria-hidden="true" tabindex="-1"></a>    total_precip <span class="op">=</span> df_filtered[(df_filtered[<span class="st">'Month'</span>] <span class="op">&gt;=</span> <span class="dv">5</span>) <span class="op">&amp;</span> (df_filtered[<span class="st">'Month'</span>] <span class="op">&lt;=</span> <span class="dv">10</span>) <span class="op">&amp;</span></span>
+<span id="cb10-26"><a href="#cb10-26" aria-hidden="true" tabindex="-1"></a>                               ((df_filtered[<span class="st">'Month'</span>] <span class="op">!=</span> <span class="dv">10</span>) <span class="op">|</span> (df_filtered[<span class="st">'Day'</span>] <span class="op">&lt;=</span> <span class="dv">30</span>))][<span class="st">'Prcp(mm)'</span>].<span class="bu">sum</span>()</span>
+<span id="cb10-27"><a href="#cb10-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-28"><a href="#cb10-28" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Save weather data for the site</span></span>
+<span id="cb10-29"><a href="#cb10-29" aria-hidden="true" tabindex="-1"></a>    weather_filename <span class="op">=</span> os.path.join(weather_dir, <span class="ss">f"site_</span><span class="sc">{</span>site<span class="sc">}</span><span class="ss">_weather_data.txt"</span>)</span>
+<span id="cb10-30"><a href="#cb10-30" aria-hidden="true" tabindex="-1"></a>    df_filtered.to_csv(weather_filename, sep<span class="op">=</span><span class="st">"</span><span class="ch">\t</span><span class="st">"</span>, index<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb10-31"><a href="#cb10-31" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"Weather data for site </span><span class="sc">{</span>site<span class="sc">}</span><span class="ss"> saved as </span><span class="sc">{</span>weather_filename<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb10-32"><a href="#cb10-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-33"><a href="#cb10-33" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Prepare weather data for AquaCrop</span></span>
+<span id="cb10-34"><a href="#cb10-34" aria-hidden="true" tabindex="-1"></a>    wdf <span class="op">=</span> prepare_weather(weather_filename)</span>
+<span id="cb10-35"><a href="#cb10-35" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-36"><a href="#cb10-36" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Define irrigation, soil, crop, and initial water content</span></span>
+<span id="cb10-37"><a href="#cb10-37" aria-hidden="true" tabindex="-1"></a>    irr_mngt <span class="op">=</span> IrrigationManagement(irrigation_method<span class="op">=</span><span class="dv">0</span>)  <span class="co"># Rain-fed</span></span>
+<span id="cb10-38"><a href="#cb10-38" aria-hidden="true" tabindex="-1"></a>    soil <span class="op">=</span> Soil(<span class="st">'LoamySand'</span>)</span>
+<span id="cb10-39"><a href="#cb10-39" aria-hidden="true" tabindex="-1"></a>    crop <span class="op">=</span> Crop(<span class="st">'Wheat'</span>,</span>
+<span id="cb10-40"><a href="#cb10-40" aria-hidden="true" tabindex="-1"></a>                planting_date<span class="op">=</span><span class="st">'04/01'</span>,</span>
+<span id="cb10-41"><a href="#cb10-41" aria-hidden="true" tabindex="-1"></a>                harvest_date<span class="op">=</span><span class="st">'11/30'</span>,</span>
+<span id="cb10-42"><a href="#cb10-42" aria-hidden="true" tabindex="-1"></a>                CropType<span class="op">=</span><span class="dv">3</span>,</span>
+<span id="cb10-43"><a href="#cb10-43" aria-hidden="true" tabindex="-1"></a>                Tbase<span class="op">=</span><span class="dv">10</span>,</span>
+<span id="cb10-44"><a href="#cb10-44" aria-hidden="true" tabindex="-1"></a>                Tupp<span class="op">=</span><span class="dv">35</span>,</span>
+<span id="cb10-45"><a href="#cb10-45" aria-hidden="true" tabindex="-1"></a>                Zmax<span class="op">=</span><span class="fl">0.7</span>,</span>
+<span id="cb10-46"><a href="#cb10-46" aria-hidden="true" tabindex="-1"></a>                WP<span class="op">=</span><span class="dv">16</span>,</span>
+<span id="cb10-47"><a href="#cb10-47" aria-hidden="true" tabindex="-1"></a>                Tmin_up<span class="op">=</span><span class="dv">8</span>,</span>
+<span id="cb10-48"><a href="#cb10-48" aria-hidden="true" tabindex="-1"></a>                Tmax_lo<span class="op">=</span><span class="dv">40</span>,</span>
+<span id="cb10-49"><a href="#cb10-49" aria-hidden="true" tabindex="-1"></a>                exc<span class="op">=</span><span class="dv">50</span>,</span>
+<span id="cb10-50"><a href="#cb10-50" aria-hidden="true" tabindex="-1"></a>                CGC<span class="op">=</span><span class="fl">0.16764</span>,</span>
+<span id="cb10-51"><a href="#cb10-51" aria-hidden="true" tabindex="-1"></a>                CCx<span class="op">=</span><span class="fl">0.95</span>,</span>
+<span id="cb10-52"><a href="#cb10-52" aria-hidden="true" tabindex="-1"></a>                CDC<span class="op">=</span><span class="fl">0.13653</span>,</span>
+<span id="cb10-53"><a href="#cb10-53" aria-hidden="true" tabindex="-1"></a>                Kcb<span class="op">=</span><span class="fl">1.10</span>,</span>
+<span id="cb10-54"><a href="#cb10-54" aria-hidden="true" tabindex="-1"></a>                fshape_r<span class="op">=</span><span class="dv">15</span>,</span>
+<span id="cb10-55"><a href="#cb10-55" aria-hidden="true" tabindex="-1"></a>                SxTopQ<span class="op">=</span><span class="fl">0.020</span>,</span>
+<span id="cb10-56"><a href="#cb10-56" aria-hidden="true" tabindex="-1"></a>                SxBotQ<span class="op">=</span><span class="fl">0.005</span>,</span>
+<span id="cb10-57"><a href="#cb10-57" aria-hidden="true" tabindex="-1"></a>                p_up4<span class="op">=</span><span class="fl">0.8</span>,</span>
+<span id="cb10-58"><a href="#cb10-58" aria-hidden="true" tabindex="-1"></a>                p_up2<span class="op">=</span><span class="fl">0.55</span>,</span>
+<span id="cb10-59"><a href="#cb10-59" aria-hidden="true" tabindex="-1"></a>                fshape_w1<span class="op">=</span><span class="dv">4</span></span>
+<span id="cb10-60"><a href="#cb10-60" aria-hidden="true" tabindex="-1"></a>               )</span>
+<span id="cb10-61"><a href="#cb10-61" aria-hidden="true" tabindex="-1"></a>    initWC <span class="op">=</span> InitialWaterContent(value<span class="op">=</span>[<span class="st">'FC'</span>])</span>
+<span id="cb10-62"><a href="#cb10-62" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-63"><a href="#cb10-63" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Create AquaCrop model instance</span></span>
+<span id="cb10-64"><a href="#cb10-64" aria-hidden="true" tabindex="-1"></a>    model <span class="op">=</span> AquaCropModel(sim_start, sim_end, wdf, soil, crop, initial_water_content<span class="op">=</span>initWC, irrigation_management<span class="op">=</span>irr_mngt)</span>
+<span id="cb10-65"><a href="#cb10-65" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-66"><a href="#cb10-66" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Run simulation</span></span>
+<span id="cb10-67"><a href="#cb10-67" aria-hidden="true" tabindex="-1"></a>    <span class="cf">try</span>:</span>
+<span id="cb10-68"><a href="#cb10-68" aria-hidden="true" tabindex="-1"></a>        model.run_model(till_termination<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb10-69"><a href="#cb10-69" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Create site-specific subdirectory</span></span>
+<span id="cb10-70"><a href="#cb10-70" aria-hidden="true" tabindex="-1"></a>        site_sim_output_dir <span class="op">=</span> os.path.join(sim_output_dir, <span class="ss">f"site_</span><span class="sc">{</span>site<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb10-71"><a href="#cb10-71" aria-hidden="true" tabindex="-1"></a>        os.makedirs(site_sim_output_dir, exist_ok<span class="op">=</span><span class="va">True</span>)<span class="op">;</span></span>
+<span id="cb10-72"><a href="#cb10-72" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-73"><a href="#cb10-73" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Save site results</span></span>
+<span id="cb10-74"><a href="#cb10-74" aria-hidden="true" tabindex="-1"></a>        results_df <span class="op">=</span> model._outputs.final_stats</span>
+<span id="cb10-75"><a href="#cb10-75" aria-hidden="true" tabindex="-1"></a>        results_df[<span class="st">'Total_Precipitation(mm)'</span>] <span class="op">=</span> total_precip</span>
+<span id="cb10-76"><a href="#cb10-76" aria-hidden="true" tabindex="-1"></a>        site_results_file <span class="op">=</span> os.path.join(site_sim_output_dir, <span class="ss">f"site_</span><span class="sc">{</span>site<span class="sc">}</span><span class="ss">_simulation_results.csv"</span>)</span>
+<span id="cb10-77"><a href="#cb10-77" aria-hidden="true" tabindex="-1"></a>        results_df.to_csv(site_results_file, index<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb10-78"><a href="#cb10-78" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="ss">f"Simulation results for site </span><span class="sc">{</span>site<span class="sc">}</span><span class="ss"> saved in </span><span class="sc">{</span>site_sim_output_dir<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb10-79"><a href="#cb10-79" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-80"><a href="#cb10-80" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Append to all results for later merging</span></span>
+<span id="cb10-81"><a href="#cb10-81" aria-hidden="true" tabindex="-1"></a>        results_df[<span class="st">'Site'</span>] <span class="op">=</span> site</span>
+<span id="cb10-82"><a href="#cb10-82" aria-hidden="true" tabindex="-1"></a>        all_simulation_results.append(results_df)</span>
+<span id="cb10-83"><a href="#cb10-83" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-84"><a href="#cb10-84" aria-hidden="true" tabindex="-1"></a>    <span class="cf">except</span> <span class="pp">Exception</span> <span class="im">as</span> e:</span>
+<span id="cb10-85"><a href="#cb10-85" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="ss">f"Error during simulation for site </span><span class="sc">{</span>site<span class="sc">}</span><span class="ss">: </span><span class="sc">{</span>e<span class="sc">}</span><span class="ss">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># --- Merge all results ---</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> all_simulation_results:</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>    merged_results <span class="op">=</span> pd.concat(all_simulation_results, ignore_index<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>    merged_results.to_csv(merged_output_file, index<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"All site simulations merged and saved as </span><span class="sc">{</span>merged_output_file<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a><span class="cf">else</span>:</span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="st">"No simulation results to merge."</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p><strong>Simulation Configuration 2</strong></p>
+<p>Our second simulation configuration aims to simulate the crop production function under an irrigation production system, simulating the crop yield–water relationship under irrigation conditions.</p>
+<p>Here, we keep the code the same as for rainfed conditions, except that we change the irrigation management to:</p>
+<p>irr_mngt = IrrigationManagement(irrigation_method=4, NetIrrSMT=70)</p>
+<p>With these simulation results, we also obtained data on the net irrigation amount at each site required to achieve the maximum potential yield.</p>
+<p>The same specifications are then applied for the years 2019, 2020, 2021, 2022, and 2023.</p>
+<p>The same workflow is also applied for canola and potato, with crop parameters customized for each crop based on published and calibrated values.</p>
+<p>For potato, we do not simulate rain-fed conditions, as growing potatoes under rain-fed conditions in Saskatchewan is rare.</p>
+<p><strong>Simulation Configuration 3</strong></p>
+<p>In the third simulation configuration, we aim to generate the data needed to estimate the marginal value of irrigation water. The marginal value of irrigation water is calculated as:</p>
+<p><span class="math display">\[\begin{equation}
+    MV_{jt}=\sum_{j=1}^{n} \frac{\triangle NR^{IR_q}_{itj}}{{\triangle IRWQ_{it}}}
+    \label{equation2}
+\end{equation}\]</span></p>
+<p>Where</p>
+<p><span class="math inline">\(NR^{IR_q}_{itj} = Y^{IR_q}_{itj}*P_{it} - C_{it}^{IR}\)</span></p>
+<p>Once you understand the basics of AquaCrop-OSPy, we can move to a more advanced application—optimizing irrigation strategies using real climate data for wheat (and later canola and potato). In our project around Lake Diefenbaker, Saskatchewan, we simulate crop yields under both rain-fed and irrigation conditions and estimate how much irrigation is needed to reach maximum potential yield. This section explains how we use AquaCrop-OSPy together with an optimization routine to find the best irrigation management strategy for each field given a limit on total irrigation supply.</p>
+<p>In earlier simulations, we assumed a fixed irrigation rule:</p>
+<p>“Apply irrigation whenever soil moisture falls below a predefined threshold.”</p>
+<p>However, when water is limited, this rule does not necessarily maximize yield. Instead, we need to find the best allocation of a fixed seasonal irrigation amount. For this, we optimize soil-moisture thresholds (SMTs) across the four major crop growth stages.</p>
+<p>How this works in simulation framework;</p>
+<ol type="1">
+<li>We choose maximum irrigation allowance per season (i.e.&nbsp;20mm, 50mm , 100mm, etc)</li>
+<li>Optimizer search for the best 4 soil moisture tresholds (SMTs)
+<ul>
+<li>one threshold for each crop growth stage: (emergence, canopy growth,maximum canopy and senescence)</li>
+</ul></li>
+<li>Whenever soil moisture goes below a threshold, irrigation is applied.</li>
+<li>Why SMTs? Because :</li>
+</ol>
+<ul>
+<li>Crops need more water during certain growth stages.</li>
+<li>Stress at key stages (e.g., flowering) reduces yield more than at others.</li>
+<li>Using different thresholds allows dynamic irrigation scheduling.</li>
+</ul>
+<p>The Optimizer (scipy.optimize) specifically;</p>
+<ul>
+<li>Try many different SMT combinations</li>
+<li>Simulate AquaCrop for each combination</li>
+<li>Measure the yield</li>
+<li>Find the SMT combination that gives the highest yield under the water constraint</li>
+</ul>
+<ol start="5" type="1">
+<li>Repeating Optimization for Different Water Constraints</li>
+</ol>
+<p>For example: - Max irrigation = 50 mm → find best SMTs → Highest yiels under 50mm irrigation availabiltiy - Max irrigation = 100 mm → find best SMTs → Highest yiels under 100mm irrigation availabiltiy - Max irrigation = 200 mm → find best SMTs → Highest yiels under 200mm irrigation availabiltiy</p>
+<p><strong>Step 1</strong></p>
+<p>Create climate data files with ET₀ — this step is similar to creating the climate data files in the above simulation configurations.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Load the downloaded Daymet data</span></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>climate_data <span class="op">=</span> pd.read_csv(<span class="st">'/Users/tharakajayalath/Library/CloudStorage/OneDrive-UniversityofSaskatchewan/Chapter II-IrrigationValue/Chapter-II/AquaCropOPSyData/ClimateData/weather_data_Aqua.csv'</span>, on_bad_lines<span class="op">=</span><span class="st">'skip'</span>)</span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Check if 'Date' column exists</span></span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> <span class="st">'Date'</span> <span class="kw">in</span> climate_data.columns:</span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Convert 'Date' column to datetime</span></span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>    climate_data[<span class="st">'Date'</span>] <span class="op">=</span> pd.to_datetime(climate_data[<span class="st">'Date'</span>], errors<span class="op">=</span><span class="st">'coerce'</span>)</span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Remove rows with missing Date values</span></span>
+<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a>    climate_data <span class="op">=</span> climate_data.dropna(subset<span class="op">=</span>[<span class="st">'Date'</span>])</span>
+<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-15"><a href="#cb12-15" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Extract Day, Month, and Year from the Date column</span></span>
+<span id="cb12-16"><a href="#cb12-16" aria-hidden="true" tabindex="-1"></a>    climate_data[<span class="st">'Day'</span>] <span class="op">=</span> climate_data[<span class="st">'Date'</span>].dt.day</span>
+<span id="cb12-17"><a href="#cb12-17" aria-hidden="true" tabindex="-1"></a>    climate_data[<span class="st">'Month'</span>] <span class="op">=</span> climate_data[<span class="st">'Date'</span>].dt.month</span>
+<span id="cb12-18"><a href="#cb12-18" aria-hidden="true" tabindex="-1"></a>    climate_data[<span class="st">'Year'</span>] <span class="op">=</span> climate_data[<span class="st">'Date'</span>].dt.year</span>
+<span id="cb12-19"><a href="#cb12-19" aria-hidden="true" tabindex="-1"></a>    e_a <span class="op">=</span> climate_data[<span class="st">'e_a'</span>]  <span class="co"># actual vapor pressure (kpa)</span></span>
+<span id="cb12-20"><a href="#cb12-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-21"><a href="#cb12-21" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Calculate necessary climate variables</span></span>
+<span id="cb12-22"><a href="#cb12-22" aria-hidden="true" tabindex="-1"></a>    T_max <span class="op">=</span> climate_data[<span class="st">'MaxTemp'</span>]  <span class="co"># Maximum temperature (°C)</span></span>
+<span id="cb12-23"><a href="#cb12-23" aria-hidden="true" tabindex="-1"></a>    T_min <span class="op">=</span> climate_data[<span class="st">'MinTemp'</span>]  <span class="co"># Minimum temperature (°C)</span></span>
+<span id="cb12-24"><a href="#cb12-24" aria-hidden="true" tabindex="-1"></a>    precipitation <span class="op">=</span> climate_data[<span class="st">'Precipitation'</span>]  <span class="co"># Precipitation (mm)</span></span>
+<span id="cb12-25"><a href="#cb12-25" aria-hidden="true" tabindex="-1"></a>    solar_radiation <span class="op">=</span> climate_data[<span class="st">'R_n'</span>]  <span class="co"># Solar radiation (MJ/m²/day)</span></span>
+<span id="cb12-26"><a href="#cb12-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-27"><a href="#cb12-27" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Calculate mean temperature</span></span>
+<span id="cb12-28"><a href="#cb12-28" aria-hidden="true" tabindex="-1"></a>    T_mean <span class="op">=</span> (T_max <span class="op">+</span> T_min) <span class="op">/</span> <span class="dv">2</span></span>
+<span id="cb12-29"><a href="#cb12-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-30"><a href="#cb12-30" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Calculate saturation vapor pressure (e_s) in kPa</span></span>
+<span id="cb12-31"><a href="#cb12-31" aria-hidden="true" tabindex="-1"></a>    e_s <span class="op">=</span> <span class="fl">0.6108</span> <span class="op">*</span> np.exp((<span class="fl">17.27</span> <span class="op">*</span> T_mean) <span class="op">/</span> (T_mean <span class="op">+</span> <span class="fl">237.3</span>))</span>
+<span id="cb12-32"><a href="#cb12-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-33"><a href="#cb12-33" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Assuming relative humidity (RH) is available or use an average value</span></span>
+<span id="cb12-34"><a href="#cb12-34" aria-hidden="true" tabindex="-1"></a>    <span class="co">#RH = 62  # Example average RH of 50%</span></span>
+<span id="cb12-35"><a href="#cb12-35" aria-hidden="true" tabindex="-1"></a>    <span class="co">#e_a = (RH / 100) * e_s  # Actual vapor pressure in kPa</span></span>
+<span id="cb12-36"><a href="#cb12-36" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-37"><a href="#cb12-37" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Define other constants</span></span>
+<span id="cb12-38"><a href="#cb12-38" aria-hidden="true" tabindex="-1"></a>    R_n <span class="op">=</span> solar_radiation  <span class="co"># Net radiation (MJ/m²/day)</span></span>
+<span id="cb12-39"><a href="#cb12-39" aria-hidden="true" tabindex="-1"></a>    G <span class="op">=</span> <span class="dv">0</span>  <span class="co"># Soil heat flux density (MJ/m²/day), often negligible</span></span>
+<span id="cb12-40"><a href="#cb12-40" aria-hidden="true" tabindex="-1"></a>    gamma <span class="op">=</span> <span class="fl">0.066</span>  <span class="co"># Psychrometric constant (kPa/°C)</span></span>
+<span id="cb12-41"><a href="#cb12-41" aria-hidden="true" tabindex="-1"></a>    u <span class="op">=</span> <span class="dv">2</span>  <span class="co"># Average wind speed in m/s (if available, else use an estimated value)</span></span>
+<span id="cb12-42"><a href="#cb12-42" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-43"><a href="#cb12-43" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Calculate slope of the saturation vapor pressure curve (Δ)</span></span>
+<span id="cb12-44"><a href="#cb12-44" aria-hidden="true" tabindex="-1"></a>    delta <span class="op">=</span> (<span class="dv">4098</span> <span class="op">*</span> e_s) <span class="op">/</span> ((T_mean <span class="op">+</span> <span class="fl">237.3</span>) <span class="op">**</span> <span class="dv">2</span>)</span>
+<span id="cb12-45"><a href="#cb12-45" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-46"><a href="#cb12-46" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Calculate reference ET (ET₀) using the Penman-Monteith equation</span></span>
+<span id="cb12-47"><a href="#cb12-47" aria-hidden="true" tabindex="-1"></a>    ReferenceET <span class="op">=</span> (<span class="fl">0.408</span> <span class="op">*</span> delta <span class="op">*</span> (R_n <span class="op">-</span> G) <span class="op">+</span> gamma <span class="op">*</span> (<span class="dv">900</span> <span class="op">/</span> (T_mean <span class="op">+</span> <span class="dv">273</span>)) <span class="op">*</span> u <span class="op">*</span> (e_s <span class="op">-</span> e_a)) <span class="op">/</span> (delta <span class="op">+</span> gamma <span class="op">*</span> (<span class="dv">1</span> <span class="op">+</span> <span class="fl">0.34</span> <span class="op">*</span> u))</span>
+<span id="cb12-48"><a href="#cb12-48" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-49"><a href="#cb12-49" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Add ET₀ to the DataFrame</span></span>
+<span id="cb12-50"><a href="#cb12-50" aria-hidden="true" tabindex="-1"></a>    climate_data[<span class="st">'ReferenceET'</span>] <span class="op">=</span> ReferenceET</span>
+<span id="cb12-51"><a href="#cb12-51" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-52"><a href="#cb12-52" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Reorder the columns to bring Day, Month, Year first</span></span>
+<span id="cb12-53"><a href="#cb12-53" aria-hidden="true" tabindex="-1"></a>    climate_data <span class="op">=</span> climate_data[[<span class="st">'Day'</span>, <span class="st">'Month'</span>, <span class="st">'Year'</span>] <span class="op">+</span> [col <span class="cf">for</span> col <span class="kw">in</span> climate_data.columns <span class="cf">if</span> col <span class="kw">not</span> <span class="kw">in</span> [<span class="st">'Day'</span>, <span class="st">'Month'</span>, <span class="st">'Year'</span>]]]</span>
+<span id="cb12-54"><a href="#cb12-54" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-55"><a href="#cb12-55" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Save the DataFrame to a text file (CSV format)</span></span>
+<span id="cb12-56"><a href="#cb12-56" aria-hidden="true" tabindex="-1"></a>    climate_data.to_csv(<span class="st">'daymet_data_with_et0.csv'</span>, index<span class="op">=</span><span class="va">False</span>)  <span class="co"># Save as a tab-separated text file</span></span>
+<span id="cb12-57"><a href="#cb12-57" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-58"><a href="#cb12-58" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="st">"Reference ET₀ calculated and saved to 'daymet_data_with_et0.csv'."</span>)</span>
+<span id="cb12-59"><a href="#cb12-59" aria-hidden="true" tabindex="-1"></a><span class="cf">else</span>:</span>
+<span id="cb12-60"><a href="#cb12-60" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="st">"The 'Date' column does not exist in the dataset."</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Reference ET₀ calculated and saved to 'daymet_data_with_et0.csv'.</code></pre>
+</div>
+</div>
+<p><strong>Step 2</strong></p>
+<p>In contrast to simulating all 394 sites at once, running optimization algorithms to find the optimal soil-moisture thresholds (SMTs) and the best yield under given irrigation levels for every site simultaneously can be very memory-intensive. To handle this efficiently, we create separate climate data files for each site. This allows us to run simulations batch-wise, improving memory allocation and computational efficiency.</p>
+<p>Here’s what the workflow in the code does:</p>
+<ol type="1">
+<li>Start with the master CSV:</li>
+</ol>
+<p>We begin with a CSV file (daymet_data_with_et0.csv) that contains daily climate data for all sites. Each row includes a site identifier (site) along with day, month, year, and climate variables.</p>
+<ol start="2" type="1">
+<li>Split into site-specific climate files:</li>
+</ol>
+<p>The code loops through each unique site and writes a separate text file for it. For example, for site 1, a file ClimateData/site_1.txt is created, for site 2, ClimateData/site_2.txt, and so on. Each file contains only the climate data for that particular site.</p>
+<ol start="3" type="1">
+<li>Prepare weather data for AquaCrop:</li>
+</ol>
+<p>After creating site-specific files, we use the prepare_weather() function on each file. This converts the raw climate data into a format that AquaCrop-OSPy can directly use for simulation.</p>
+<ol start="4" type="1">
+<li>Simulate per site:</li>
+</ol>
+<p>With the prepared weather data, we can run AquaCrop simulations independently for each site. This allows us to optimize irrigation strategies and predict crop yields tailored to the specific conditions at each location.</p>
+<p>By processing the data site by site, we reduce memory load and make it feasible to run complex optimization algorithms across hundreds of sites efficiently.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> os</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a><span class="co"># --- Load data ---</span></span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>input_file <span class="op">=</span> <span class="st">"./AquaCropReadme/daymet_data_with_et0.csv"</span></span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.read_csv(input_file)</span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a><span class="co"># --- Unique sites ---</span></span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a>unique_sites <span class="op">=</span> df[<span class="st">'site'</span>].unique()</span>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a><span class="co"># --- Directory for weather files (same as earlier setup) ---</span></span>
+<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a>cwd <span class="op">=</span> os.getcwd()</span>
+<span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a>weather_dir <span class="op">=</span> os.path.join(cwd, <span class="st">"ClimateData"</span>)</span>
+<span id="cb14-14"><a href="#cb14-14" aria-hidden="true" tabindex="-1"></a>os.makedirs(weather_dir, exist_ok<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb14-15"><a href="#cb14-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-16"><a href="#cb14-16" aria-hidden="true" tabindex="-1"></a><span class="co"># --- Columns to select and rename ---</span></span>
+<span id="cb14-17"><a href="#cb14-17" aria-hidden="true" tabindex="-1"></a>columns_to_select <span class="op">=</span> [<span class="st">'Day'</span>, <span class="st">'Month'</span>, <span class="st">'Year'</span>, <span class="st">'MinTemp'</span>, <span class="st">'MaxTemp'</span>, <span class="st">'Precipitation'</span>, <span class="st">'ReferenceET'</span>]</span>
+<span id="cb14-18"><a href="#cb14-18" aria-hidden="true" tabindex="-1"></a>columns_to_rename <span class="op">=</span> {</span>
+<span id="cb14-19"><a href="#cb14-19" aria-hidden="true" tabindex="-1"></a>    <span class="st">'MinTemp'</span>: <span class="st">'Tmin(c)'</span>,</span>
+<span id="cb14-20"><a href="#cb14-20" aria-hidden="true" tabindex="-1"></a>    <span class="st">'MaxTemp'</span>: <span class="st">'Tmax(c)'</span>,</span>
+<span id="cb14-21"><a href="#cb14-21" aria-hidden="true" tabindex="-1"></a>    <span class="st">'Precipitation'</span>: <span class="st">'Prcp(mm)'</span>,</span>
+<span id="cb14-22"><a href="#cb14-22" aria-hidden="true" tabindex="-1"></a>    <span class="st">'ReferenceET'</span>: <span class="st">'Et0(mm)'</span></span>
+<span id="cb14-23"><a href="#cb14-23" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb14-24"><a href="#cb14-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-25"><a href="#cb14-25" aria-hidden="true" tabindex="-1"></a><span class="co"># --- Loop through each site and save weather files ---</span></span>
+<span id="cb14-26"><a href="#cb14-26" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> site <span class="kw">in</span> unique_sites:</span>
+<span id="cb14-27"><a href="#cb14-27" aria-hidden="true" tabindex="-1"></a>    df_filtered <span class="op">=</span> (</span>
+<span id="cb14-28"><a href="#cb14-28" aria-hidden="true" tabindex="-1"></a>        df[df[<span class="st">'site'</span>] <span class="op">==</span> site][columns_to_select]</span>
+<span id="cb14-29"><a href="#cb14-29" aria-hidden="true" tabindex="-1"></a>        .rename(columns<span class="op">=</span>columns_to_rename)</span>
+<span id="cb14-30"><a href="#cb14-30" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb14-31"><a href="#cb14-31" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb14-32"><a href="#cb14-32" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Weather file path</span></span>
+<span id="cb14-33"><a href="#cb14-33" aria-hidden="true" tabindex="-1"></a>    weather_filename <span class="op">=</span> os.path.join(weather_dir, <span class="ss">f"site_</span><span class="sc">{</span>site<span class="sc">}</span><span class="ss">.txt"</span>)</span>
+<span id="cb14-34"><a href="#cb14-34" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb14-35"><a href="#cb14-35" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Save weather file</span></span>
+<span id="cb14-36"><a href="#cb14-36" aria-hidden="true" tabindex="-1"></a>    df_filtered.to_csv(weather_filename, sep<span class="op">=</span><span class="st">"</span><span class="ch">\t</span><span class="st">"</span>, index<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb14-37"><a href="#cb14-37" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"Weather data saved for site </span><span class="sc">{</span>site<span class="sc">}</span><span class="ss">."</span>)  <span class="co"># Remove if you want full silence</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p><strong>Step 3</strong></p>
+<p>Create whether data file for each site.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> os</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> aquacrop.utils.prepare_weather <span class="im">import</span> prepare_weather</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Base working directory (same as earlier)</span></span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>cwd <span class="op">=</span> os.getcwd()</span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Input directory containing the raw climate text files</span></span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>input_dir <span class="op">=</span> os.path.join(cwd, <span class="st">"ClimateData"</span>)</span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Output directory for prepared WDF files</span></span>
+<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a>prepared_wdf_dir <span class="op">=</span> os.path.join(cwd, <span class="st">"PreparedWDF"</span>)</span>
+<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a>os.makedirs(prepared_wdf_dir, exist_ok<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb15-13"><a href="#cb15-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-14"><a href="#cb15-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Number of sites</span></span>
+<span id="cb15-15"><a href="#cb15-15" aria-hidden="true" tabindex="-1"></a>num_sites <span class="op">=</span> <span class="dv">397</span>  <span class="co"># adjust if needed</span></span>
+<span id="cb15-16"><a href="#cb15-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-17"><a href="#cb15-17" aria-hidden="true" tabindex="-1"></a><span class="co"># Dynamically create file names (site_1.txt ... site_397.txt)</span></span>
+<span id="cb15-18"><a href="#cb15-18" aria-hidden="true" tabindex="-1"></a>climate_files <span class="op">=</span> [<span class="ss">f"site_</span><span class="sc">{</span>i<span class="sc">}</span><span class="ss">.txt"</span> <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">1</span>, num_sites <span class="op">+</span> <span class="dv">1</span>)]</span>
+<span id="cb15-19"><a href="#cb15-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-20"><a href="#cb15-20" aria-hidden="true" tabindex="-1"></a><span class="co"># Loop and process each climate file</span></span>
+<span id="cb15-21"><a href="#cb15-21" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> climate_file <span class="kw">in</span> climate_files:</span>
+<span id="cb15-22"><a href="#cb15-22" aria-hidden="true" tabindex="-1"></a>    file_path <span class="op">=</span> os.path.join(input_dir, climate_file)</span>
+<span id="cb15-23"><a href="#cb15-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-24"><a href="#cb15-24" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> os.path.exists(file_path):</span>
+<span id="cb15-25"><a href="#cb15-25" aria-hidden="true" tabindex="-1"></a>        <span class="cf">try</span>:</span>
+<span id="cb15-26"><a href="#cb15-26" aria-hidden="true" tabindex="-1"></a>            <span class="co"># Prepare weather data for AquaCrop</span></span>
+<span id="cb15-27"><a href="#cb15-27" aria-hidden="true" tabindex="-1"></a>            wdf <span class="op">=</span> prepare_weather(file_path)</span>
+<span id="cb15-28"><a href="#cb15-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-29"><a href="#cb15-29" aria-hidden="true" tabindex="-1"></a>            <span class="co"># Save the prepared weather file</span></span>
+<span id="cb15-30"><a href="#cb15-30" aria-hidden="true" tabindex="-1"></a>            prepared_path <span class="op">=</span> os.path.join(prepared_wdf_dir, <span class="ss">f"prepared_</span><span class="sc">{</span>climate_file<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb15-31"><a href="#cb15-31" aria-hidden="true" tabindex="-1"></a>            wdf.to_csv(prepared_path, index<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb15-32"><a href="#cb15-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-33"><a href="#cb15-33" aria-hidden="true" tabindex="-1"></a>            <span class="bu">print</span>(<span class="ss">f"Weather data prepared and saved: </span><span class="sc">{</span>climate_file<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb15-34"><a href="#cb15-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-35"><a href="#cb15-35" aria-hidden="true" tabindex="-1"></a>        <span class="cf">except</span> <span class="pp">Exception</span> <span class="im">as</span> e:</span>
+<span id="cb15-36"><a href="#cb15-36" aria-hidden="true" tabindex="-1"></a>            <span class="bu">print</span>(<span class="ss">f"Error processing </span><span class="sc">{</span>climate_file<span class="sc">}</span><span class="ss">: </span><span class="sc">{</span>e<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb15-37"><a href="#cb15-37" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-38"><a href="#cb15-38" aria-hidden="true" tabindex="-1"></a>    <span class="cf">else</span>:</span>
+<span id="cb15-39"><a href="#cb15-39" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="ss">f"Missing file: </span><span class="sc">{</span>file_path<span class="sc">}</span><span class="ss">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p><strong>Step 3</strong></p>
+<p><strong>Understanding and Defining the Core Functions</strong></p>
+<p><strong>1. run_model()</strong></p>
+<p>Runs the AquaCrop model using:</p>
+<ul>
+<li><p>a set of soil-moisture thresholds (SMTs)</p></li>
+<li><p>a maximum seasonal irrigation limit</p></li>
+<li><p>crop and soil parameters</p></li>
+<li><p>weather data</p></li>
+<li><p>simulation start and end dates</p></li>
+</ul>
+<p>It returns simulation outputs, including yield and irrigation applied.</p>
+<p><strong>2. evaluate()</strong></p>
+<p>Takes SMTs and:</p>
+<ul>
+<li><p>runs the model</p></li>
+<li><p>extracts mean yield and total irrigation</p></li>
+</ul>
+<p>If test=False, it returns -yield, because: The optimizer minimizes the objective, so minimizing -yield = maximizing yield.</p>
+<p>If test=True, it returns the actual numbers: yield, irrigation, reward.</p>
+<p><strong>3. get_starting_point()</strong></p>
+<p>Before optimization, we generate many random SMT combinations and evaluate their performance.</p>
+<p>The best-performing one becomes the starting point for the local optimization.</p>
+<p>This avoids getting stuck in poor solutions.</p>
+<p><strong>4. optimize()</strong></p>
+<p>This is the main optimization function. It:</p>
+<ul>
+<li><p>Gets a good initial SMT guess using get_starting_point()</p></li>
+<li><p>Uses scipy.optimize.fmin() to refine the SMTs and maximize yield</p></li>
+<li><p>Returns the optimal SMTs for the given irrigation limit and weather data</p></li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> os</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> aquacrop <span class="im">import</span> AquaCropModel, Soil, Crop, InitialWaterContent, IrrigationManagement</span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> scipy.optimize <span class="im">import</span> fmin</span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a><span class="co"># --------------------------------------------</span></span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a><span class="co"># 1. Define run_model() function</span></span>
+<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a><span class="co"># --------------------------------------------</span></span>
+<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> run_model(smts, max_irr_season, year1, year2, wdf):</span>
+<span id="cb16-13"><a href="#cb16-13" aria-hidden="true" tabindex="-1"></a>    wheat <span class="op">=</span> Crop(</span>
+<span id="cb16-14"><a href="#cb16-14" aria-hidden="true" tabindex="-1"></a>        <span class="st">'Wheat'</span>,</span>
+<span id="cb16-15"><a href="#cb16-15" aria-hidden="true" tabindex="-1"></a>        planting_date<span class="op">=</span><span class="st">'05/01'</span>,</span>
+<span id="cb16-16"><a href="#cb16-16" aria-hidden="true" tabindex="-1"></a>        harvest_date<span class="op">=</span><span class="st">'10/30'</span>,</span>
+<span id="cb16-17"><a href="#cb16-17" aria-hidden="true" tabindex="-1"></a>        CropType<span class="op">=</span><span class="dv">3</span>,</span>
+<span id="cb16-18"><a href="#cb16-18" aria-hidden="true" tabindex="-1"></a>        Tbase<span class="op">=</span><span class="dv">10</span>,</span>
+<span id="cb16-19"><a href="#cb16-19" aria-hidden="true" tabindex="-1"></a>        Tupp<span class="op">=</span><span class="dv">35</span>,</span>
+<span id="cb16-20"><a href="#cb16-20" aria-hidden="true" tabindex="-1"></a>        Zmax<span class="op">=</span><span class="fl">0.7</span>,</span>
+<span id="cb16-21"><a href="#cb16-21" aria-hidden="true" tabindex="-1"></a>        WP<span class="op">=</span><span class="dv">16</span>,</span>
+<span id="cb16-22"><a href="#cb16-22" aria-hidden="true" tabindex="-1"></a>        Tmin_up<span class="op">=</span><span class="dv">8</span>,</span>
+<span id="cb16-23"><a href="#cb16-23" aria-hidden="true" tabindex="-1"></a>        Tmax_lo<span class="op">=</span><span class="dv">40</span>,</span>
+<span id="cb16-24"><a href="#cb16-24" aria-hidden="true" tabindex="-1"></a>        exc<span class="op">=</span><span class="dv">50</span>,</span>
+<span id="cb16-25"><a href="#cb16-25" aria-hidden="true" tabindex="-1"></a>        CGC<span class="op">=</span><span class="fl">0.16764</span>,</span>
+<span id="cb16-26"><a href="#cb16-26" aria-hidden="true" tabindex="-1"></a>        CCx<span class="op">=</span><span class="fl">0.95</span>,</span>
+<span id="cb16-27"><a href="#cb16-27" aria-hidden="true" tabindex="-1"></a>        CDC<span class="op">=</span><span class="fl">0.13653</span>,</span>
+<span id="cb16-28"><a href="#cb16-28" aria-hidden="true" tabindex="-1"></a>        Kcb<span class="op">=</span><span class="fl">1.10</span>,</span>
+<span id="cb16-29"><a href="#cb16-29" aria-hidden="true" tabindex="-1"></a>        fshape_r<span class="op">=</span><span class="dv">15</span>,</span>
+<span id="cb16-30"><a href="#cb16-30" aria-hidden="true" tabindex="-1"></a>        SxTopQ<span class="op">=</span><span class="fl">0.020</span>,</span>
+<span id="cb16-31"><a href="#cb16-31" aria-hidden="true" tabindex="-1"></a>        SxBotQ<span class="op">=</span><span class="fl">0.005</span>,</span>
+<span id="cb16-32"><a href="#cb16-32" aria-hidden="true" tabindex="-1"></a>        p_up4<span class="op">=</span><span class="fl">0.8</span>,</span>
+<span id="cb16-33"><a href="#cb16-33" aria-hidden="true" tabindex="-1"></a>        p_up2<span class="op">=</span><span class="fl">0.55</span>,</span>
+<span id="cb16-34"><a href="#cb16-34" aria-hidden="true" tabindex="-1"></a>        fshape_w1<span class="op">=</span><span class="dv">4</span></span>
+<span id="cb16-35"><a href="#cb16-35" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb16-36"><a href="#cb16-36" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-37"><a href="#cb16-37" aria-hidden="true" tabindex="-1"></a>    soil <span class="op">=</span> Soil(<span class="st">'LoamySand'</span>)</span>
+<span id="cb16-38"><a href="#cb16-38" aria-hidden="true" tabindex="-1"></a>    init_wc <span class="op">=</span> InitialWaterContent(wc_type<span class="op">=</span><span class="st">'Pct'</span>, value<span class="op">=</span>[<span class="dv">70</span>])</span>
+<span id="cb16-39"><a href="#cb16-39" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-40"><a href="#cb16-40" aria-hidden="true" tabindex="-1"></a>    irrmngt <span class="op">=</span> IrrigationManagement(</span>
+<span id="cb16-41"><a href="#cb16-41" aria-hidden="true" tabindex="-1"></a>        irrigation_method<span class="op">=</span><span class="dv">1</span>,</span>
+<span id="cb16-42"><a href="#cb16-42" aria-hidden="true" tabindex="-1"></a>        SMT<span class="op">=</span>smts,</span>
+<span id="cb16-43"><a href="#cb16-43" aria-hidden="true" tabindex="-1"></a>        MaxIrrSeason<span class="op">=</span>max_irr_season</span>
+<span id="cb16-44"><a href="#cb16-44" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb16-45"><a href="#cb16-45" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-46"><a href="#cb16-46" aria-hidden="true" tabindex="-1"></a>    model <span class="op">=</span> AquaCropModel(</span>
+<span id="cb16-47"><a href="#cb16-47" aria-hidden="true" tabindex="-1"></a>        <span class="ss">f"</span><span class="sc">{</span>year1<span class="sc">}</span><span class="ss">/05/01"</span>,</span>
+<span id="cb16-48"><a href="#cb16-48" aria-hidden="true" tabindex="-1"></a>        <span class="ss">f"</span><span class="sc">{</span>year2<span class="sc">}</span><span class="ss">/10/31"</span>,</span>
+<span id="cb16-49"><a href="#cb16-49" aria-hidden="true" tabindex="-1"></a>        wdf,</span>
+<span id="cb16-50"><a href="#cb16-50" aria-hidden="true" tabindex="-1"></a>        soil,</span>
+<span id="cb16-51"><a href="#cb16-51" aria-hidden="true" tabindex="-1"></a>        wheat,</span>
+<span id="cb16-52"><a href="#cb16-52" aria-hidden="true" tabindex="-1"></a>        irrigation_management<span class="op">=</span>irrmngt,</span>
+<span id="cb16-53"><a href="#cb16-53" aria-hidden="true" tabindex="-1"></a>        initial_water_content<span class="op">=</span>init_wc</span>
+<span id="cb16-54"><a href="#cb16-54" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb16-55"><a href="#cb16-55" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-56"><a href="#cb16-56" aria-hidden="true" tabindex="-1"></a>    model.run_model(till_termination<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb16-57"><a href="#cb16-57" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> model.get_simulation_results()</span>
+<span id="cb16-58"><a href="#cb16-58" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-59"><a href="#cb16-59" aria-hidden="true" tabindex="-1"></a><span class="co"># --------------------------------------------</span></span>
+<span id="cb16-60"><a href="#cb16-60" aria-hidden="true" tabindex="-1"></a><span class="co"># 2. Define evaluate() function</span></span>
+<span id="cb16-61"><a href="#cb16-61" aria-hidden="true" tabindex="-1"></a><span class="co"># --------------------------------------------</span></span>
+<span id="cb16-62"><a href="#cb16-62" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> evaluate(smts, max_irr_season, wdf, test<span class="op">=</span><span class="va">False</span>):</span>
+<span id="cb16-63"><a href="#cb16-63" aria-hidden="true" tabindex="-1"></a>    out <span class="op">=</span> run_model(smts, max_irr_season, <span class="dv">2018</span>, <span class="dv">2018</span>, wdf)</span>
+<span id="cb16-64"><a href="#cb16-64" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-65"><a href="#cb16-65" aria-hidden="true" tabindex="-1"></a>    yld <span class="op">=</span> out[<span class="st">'Fresh yield (tonne/ha)'</span>].mean()</span>
+<span id="cb16-66"><a href="#cb16-66" aria-hidden="true" tabindex="-1"></a>    tirr <span class="op">=</span> out[<span class="st">'Seasonal irrigation (mm)'</span>].mean()</span>
+<span id="cb16-67"><a href="#cb16-67" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-68"><a href="#cb16-68" aria-hidden="true" tabindex="-1"></a>    reward <span class="op">=</span> yld</span>
+<span id="cb16-69"><a href="#cb16-69" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-70"><a href="#cb16-70" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> test:</span>
+<span id="cb16-71"><a href="#cb16-71" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> yld, tirr, reward</span>
+<span id="cb16-72"><a href="#cb16-72" aria-hidden="true" tabindex="-1"></a>    <span class="cf">else</span>:</span>
+<span id="cb16-73"><a href="#cb16-73" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="op">-</span>reward</span>
+<span id="cb16-74"><a href="#cb16-74" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-75"><a href="#cb16-75" aria-hidden="true" tabindex="-1"></a><span class="co"># --------------------------------------------</span></span>
+<span id="cb16-76"><a href="#cb16-76" aria-hidden="true" tabindex="-1"></a><span class="co"># 3. Define get_starting_point() function</span></span>
+<span id="cb16-77"><a href="#cb16-77" aria-hidden="true" tabindex="-1"></a><span class="co"># --------------------------------------------</span></span>
+<span id="cb16-78"><a href="#cb16-78" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> get_starting_point(num_smts, max_irr_season, num_searches, wdf):</span>
+<span id="cb16-79"><a href="#cb16-79" aria-hidden="true" tabindex="-1"></a>    x0list <span class="op">=</span> np.random.rand(num_searches, num_smts) <span class="op">*</span> <span class="dv">100</span> <span class="co"># Each SMT threshold is allowed to vary between 0% and 100% soil moisture.This defines the search space for irrigation thresholds.</span></span>
+<span id="cb16-80"><a href="#cb16-80" aria-hidden="true" tabindex="-1"></a>    rlist <span class="op">=</span> []</span>
+<span id="cb16-81"><a href="#cb16-81" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-82"><a href="#cb16-82" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> xtest <span class="kw">in</span> x0list:</span>
+<span id="cb16-83"><a href="#cb16-83" aria-hidden="true" tabindex="-1"></a>        r <span class="op">=</span> evaluate(xtest, max_irr_season, wdf)</span>
+<span id="cb16-84"><a href="#cb16-84" aria-hidden="true" tabindex="-1"></a>        rlist.append(r)</span>
+<span id="cb16-85"><a href="#cb16-85" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-86"><a href="#cb16-86" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> x0list[np.argmin(rlist)]</span>
+<span id="cb16-87"><a href="#cb16-87" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-88"><a href="#cb16-88" aria-hidden="true" tabindex="-1"></a><span class="co"># num_searches=100 means:</span></span>
+<span id="cb16-89"><a href="#cb16-89" aria-hidden="true" tabindex="-1"></a><span class="co"># The algorithm will generate 100 random sets of SMT values</span></span>
+<span id="cb16-90"><a href="#cb16-90" aria-hidden="true" tabindex="-1"></a><span class="co"># Evaluate all 100</span></span>
+<span id="cb16-91"><a href="#cb16-91" aria-hidden="true" tabindex="-1"></a><span class="co"># Pick the best one (the one that gives the highest yield)</span></span>
+<span id="cb16-92"><a href="#cb16-92" aria-hidden="true" tabindex="-1"></a><span class="co"># Use that best set as the starting point for the optimizer (fmin).</span></span>
+<span id="cb16-93"><a href="#cb16-93" aria-hidden="true" tabindex="-1"></a><span class="co"># Why do we need 100 random starting points?</span></span>
+<span id="cb16-94"><a href="#cb16-94" aria-hidden="true" tabindex="-1"></a><span class="co"># Optimizing irrigation thresholds is a nonlinear problem, so:</span></span>
+<span id="cb16-95"><a href="#cb16-95" aria-hidden="true" tabindex="-1"></a><span class="co"># The objective function (yield) may have many local maxima.</span></span>
+<span id="cb16-96"><a href="#cb16-96" aria-hidden="true" tabindex="-1"></a><span class="co"># If you start optimization from a bad initial guess, you might get stuck in a local optimum.</span></span>
+<span id="cb16-97"><a href="#cb16-97" aria-hidden="true" tabindex="-1"></a><span class="co"># Trying 100 random initial guesses increases the chance of finding a good region of the search space.</span></span>
+<span id="cb16-98"><a href="#cb16-98" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-99"><a href="#cb16-99" aria-hidden="true" tabindex="-1"></a><span class="co"># --------------------------------------------</span></span>
+<span id="cb16-100"><a href="#cb16-100" aria-hidden="true" tabindex="-1"></a><span class="co"># 4. Define optimize() function</span></span>
+<span id="cb16-101"><a href="#cb16-101" aria-hidden="true" tabindex="-1"></a><span class="co"># --------------------------------------------</span></span>
+<span id="cb16-102"><a href="#cb16-102" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> optimize(num_smts, max_irr_season, wdf, num_searches<span class="op">=</span><span class="dv">100</span>):</span>
+<span id="cb16-103"><a href="#cb16-103" aria-hidden="true" tabindex="-1"></a>    x0 <span class="op">=</span> get_starting_point(num_smts, max_irr_season, num_searches, wdf)</span>
+<span id="cb16-104"><a href="#cb16-104" aria-hidden="true" tabindex="-1"></a>    res <span class="op">=</span> fmin(evaluate, x0, disp<span class="op">=</span><span class="dv">0</span>, args<span class="op">=</span>(max_irr_season, wdf))</span>
+<span id="cb16-105"><a href="#cb16-105" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> res.squeeze()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>In our set up with filed level simulationas and over 300 fields following code optimize irrigation strategies for multiple sites and irrigation levels in parallel, and save the results in a single CSV file.</p>
+<p><strong>1. Define irrigation levels</strong></p>
+<p>max_irr_values = [10,20,30,40,50,60,70,80,90,100,110,120,130,140,150,160,170,180,190,200]</p>
+<p>These are maximum seasonal irrigation levels (mm) to test. The code will optimize soil-moisture thresholds (SMTs) for each irrigation limit.</p>
+<p><strong>2. Define site IDs</strong></p>
+<p>site_ids = range(1, 5)</p>
+<p>Here we have over 300 sites and I have run the code for chunks of sites as feeding higher number of sites into sigle lool ovewhem the memory</p>
+<p><strong>3. Load prepared weather files</strong></p>
+<p>wdfs = { site_id: prepare_weather(f”./ClimateData/site_{site_id}.txt”) for site_id in site_ids }</p>
+<ul>
+<li>Loads site-specific weather files into a dictionary (wdfs) for quick access.</li>
+<li>Each site has its own prepared weather data (wdf) for AquaCrop.</li>
+</ul>
+<p><strong>4. Define the function to process each site + irrigation level</strong></p>
+<p>def process_site_irr_max(site_id, max_irr, wdf): smts = optimize(4, max_irr, wdf)<br>
+yld, tirr, _ = evaluate(smts, max_irr, wdf, True)</p>
+<pre><code>return {
+    'Site_ID': site_id,
+    'Max_Irrigation_mm': max_irr,
+    'Optimal_SMTs': smts.tolist(),
+    'Yield_tonne_per_ha': yld,
+    'Total_Irrigation_mm': tirr
+}
+
+Inputs: site ID, max irrigation allowed, prepared weather data.</code></pre>
+<p>Process:</p>
+<ul>
+<li><p>Calls optimize to find the best soil-moisture thresholds (SMTs) for the site and irrigation limit.</p></li>
+<li><p>Calls evaluate with test=True to get yield and total irrigation for the optimized SMTs.</p></li>
+<li><p>Output: a dictionary with site ID, irrigation level, optimal SMTs, yield, and irrigation applied.</p></li>
+</ul>
+<p><strong>5. Run the optimization in parallel</strong></p>
+<p>all_results = Parallel(n_jobs=15)( delayed(process_site_irr_max)(site_id, max_irr, wdfs[site_id]) for max_irr in max_irr_values for site_id in site_ids )</p>
+<ul>
+<li>Uses joblib to run multiple optimizations simultaneously.</li>
+<li>n_jobs=15 → runs 15 tasks at the same time (depends on your CPU cores).</li>
+<li>Loops over all combinations of site_ids and max_irr_values.</li>
+<li>Collects results for all sites and irrigation levels into a list (all_results).</li>
+</ul>
+<p><strong>6. Convert results to a DataFrame and save</strong></p>
+<p>results_df = pd.DataFrame(all_results) results_df.to_csv(“./AquaCropReadme/merged_results_1.csv”, index=False)</p>
+<p>Converts the list of dictionaries into a DataFrame. Saves all the optimized results in a CSV file for further analysis.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> joblib <span class="im">import</span> Parallel, delayed</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> tqdm <span class="im">import</span> tqdm</span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a><span class="co"># --------------------------------------------</span></span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a><span class="co"># 1. Define irrigation levels to loop through</span></span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a><span class="co"># --------------------------------------------</span></span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a>max_irr_values <span class="op">=</span> [<span class="dv">10</span>,<span class="dv">20</span>,<span class="dv">30</span>,<span class="dv">40</span>,<span class="dv">50</span>,<span class="dv">60</span>,<span class="dv">70</span>,<span class="dv">80</span>,<span class="dv">90</span>,<span class="dv">100</span>,<span class="dv">110</span>,<span class="dv">120</span>,<span class="dv">130</span>,<span class="dv">140</span>,<span class="dv">150</span>,<span class="dv">160</span>,<span class="dv">170</span>,<span class="dv">180</span>,<span class="dv">190</span>,<span class="dv">200</span>]</span>
+<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Modify as needed</span></span>
+<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-11"><a href="#cb18-11" aria-hidden="true" tabindex="-1"></a><span class="co"># --------------------------------------------</span></span>
+<span id="cb18-12"><a href="#cb18-12" aria-hidden="true" tabindex="-1"></a><span class="co"># 2. Define site IDs</span></span>
+<span id="cb18-13"><a href="#cb18-13" aria-hidden="true" tabindex="-1"></a><span class="co"># --------------------------------------------</span></span>
+<span id="cb18-14"><a href="#cb18-14" aria-hidden="true" tabindex="-1"></a>site_ids <span class="op">=</span> <span class="bu">range</span>(<span class="dv">1</span>, <span class="dv">2</span>)  <span class="co"># Adjust as needed</span></span>
+<span id="cb18-15"><a href="#cb18-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-16"><a href="#cb18-16" aria-hidden="true" tabindex="-1"></a><span class="co"># --------------------------------------------</span></span>
+<span id="cb18-17"><a href="#cb18-17" aria-hidden="true" tabindex="-1"></a><span class="co"># 3. Load all prepared weather files first</span></span>
+<span id="cb18-18"><a href="#cb18-18" aria-hidden="true" tabindex="-1"></a><span class="co"># --------------------------------------------</span></span>
+<span id="cb18-19"><a href="#cb18-19" aria-hidden="true" tabindex="-1"></a>wdfs <span class="op">=</span> {</span>
+<span id="cb18-20"><a href="#cb18-20" aria-hidden="true" tabindex="-1"></a>    site_id: prepare_weather(<span class="ss">f"./ClimateData/site_</span><span class="sc">{</span>site_id<span class="sc">}</span><span class="ss">.txt"</span>)</span>
+<span id="cb18-21"><a href="#cb18-21" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> site_id <span class="kw">in</span> site_ids</span>
+<span id="cb18-22"><a href="#cb18-22" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb18-23"><a href="#cb18-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-24"><a href="#cb18-24" aria-hidden="true" tabindex="-1"></a><span class="co"># --------------------------------------------</span></span>
+<span id="cb18-25"><a href="#cb18-25" aria-hidden="true" tabindex="-1"></a><span class="co"># 4. Function that runs for each site + irrigation level</span></span>
+<span id="cb18-26"><a href="#cb18-26" aria-hidden="true" tabindex="-1"></a><span class="co"># --------------------------------------------</span></span>
+<span id="cb18-27"><a href="#cb18-27" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> process_site_irr_max(site_id, max_irr, wdf):</span>
+<span id="cb18-28"><a href="#cb18-28" aria-hidden="true" tabindex="-1"></a>    smts <span class="op">=</span> optimize(<span class="dv">4</span>, max_irr, wdf)  </span>
+<span id="cb18-29"><a href="#cb18-29" aria-hidden="true" tabindex="-1"></a>    yld, tirr, _ <span class="op">=</span> evaluate(smts, max_irr, wdf, <span class="va">True</span>)</span>
+<span id="cb18-30"><a href="#cb18-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-31"><a href="#cb18-31" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> {</span>
+<span id="cb18-32"><a href="#cb18-32" aria-hidden="true" tabindex="-1"></a>        <span class="st">'Site_ID'</span>: site_id,</span>
+<span id="cb18-33"><a href="#cb18-33" aria-hidden="true" tabindex="-1"></a>        <span class="st">'Max_Irrigation_mm'</span>: max_irr,</span>
+<span id="cb18-34"><a href="#cb18-34" aria-hidden="true" tabindex="-1"></a>        <span class="st">'Optimal_SMTs'</span>: smts.tolist(),</span>
+<span id="cb18-35"><a href="#cb18-35" aria-hidden="true" tabindex="-1"></a>        <span class="st">'Yield_tonne_per_ha'</span>: yld,</span>
+<span id="cb18-36"><a href="#cb18-36" aria-hidden="true" tabindex="-1"></a>        <span class="st">'Total_Irrigation_mm'</span>: tirr</span>
+<span id="cb18-37"><a href="#cb18-37" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb18-38"><a href="#cb18-38" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-39"><a href="#cb18-39" aria-hidden="true" tabindex="-1"></a><span class="co"># --------------------------------------------</span></span>
+<span id="cb18-40"><a href="#cb18-40" aria-hidden="true" tabindex="-1"></a><span class="co"># 5. Run the parallel processing</span></span>
+<span id="cb18-41"><a href="#cb18-41" aria-hidden="true" tabindex="-1"></a><span class="co"># --------------------------------------------</span></span>
+<span id="cb18-42"><a href="#cb18-42" aria-hidden="true" tabindex="-1"></a>all_results <span class="op">=</span> Parallel(n_jobs<span class="op">=</span><span class="dv">15</span>)(</span>
+<span id="cb18-43"><a href="#cb18-43" aria-hidden="true" tabindex="-1"></a>    delayed(process_site_irr_max)(site_id, max_irr, wdfs[site_id])</span>
+<span id="cb18-44"><a href="#cb18-44" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> max_irr <span class="kw">in</span> max_irr_values</span>
+<span id="cb18-45"><a href="#cb18-45" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> site_id <span class="kw">in</span> site_ids</span>
+<span id="cb18-46"><a href="#cb18-46" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb18-47"><a href="#cb18-47" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-48"><a href="#cb18-48" aria-hidden="true" tabindex="-1"></a><span class="co"># --------------------------------------------</span></span>
+<span id="cb18-49"><a href="#cb18-49" aria-hidden="true" tabindex="-1"></a><span class="co"># 6. Convert results to dataframe and save</span></span>
+<span id="cb18-50"><a href="#cb18-50" aria-hidden="true" tabindex="-1"></a><span class="co"># --------------------------------------------</span></span>
+<span id="cb18-51"><a href="#cb18-51" aria-hidden="true" tabindex="-1"></a>results_df <span class="op">=</span> pd.DataFrame(all_results)</span>
+<span id="cb18-52"><a href="#cb18-52" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-53"><a href="#cb18-53" aria-hidden="true" tabindex="-1"></a>results_df.to_csv(</span>
+<span id="cb18-54"><a href="#cb18-54" aria-hidden="true" tabindex="-1"></a>    <span class="st">"./AquaCropReadme/merged_results_1.csv"</span>,</span>
+<span id="cb18-55"><a href="#cb18-55" aria-hidden="true" tabindex="-1"></a>    index<span class="op">=</span><span class="va">False</span></span>
+<span id="cb18-56"><a href="#cb18-56" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb18-57"><a href="#cb18-57" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-58"><a href="#cb18-58" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Finished! File saved."</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Finished! File saved.</code></pre>
+</div>
+</div>
+<p>APPENDIX</p>
+<p>Crop patemeters in AquaCrop</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 53%">
+<col style="width: 46%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Variable Name</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Name</td>
+<td>Crop name, e.g., ‘maize’</td>
+</tr>
+<tr class="even">
+<td>CropType</td>
+<td>Crop type (1 = Leafy vegetable, 2 = Root/tuber, 3 = Fruit/grain)</td>
+</tr>
+<tr class="odd">
+<td>PlantMethod</td>
+<td>Planting method (0 = Transplanted, 1 = Sown)</td>
+</tr>
+<tr class="even">
+<td>CalendarType</td>
+<td>Calendar type (1 = Calendar days, 2 = Growing degree days)</td>
+</tr>
+<tr class="odd">
+<td>SwitchGDD</td>
+<td>Convert calendar to GDD mode if inputs are in calendar days (0 = No; 1 = Yes)</td>
+</tr>
+<tr class="even">
+<td>PlantingDate</td>
+<td>Planting date (mm/dd)</td>
+</tr>
+<tr class="odd">
+<td>HarvestDate</td>
+<td>Latest harvest date (mm/dd)</td>
+</tr>
+<tr class="even">
+<td>Emergence</td>
+<td>Growing degree/calendar days from sowing to emergence/transplant recovery</td>
+</tr>
+<tr class="odd">
+<td>MaxRooting</td>
+<td>Growing degree/calendar days from sowing to maximum rooting</td>
+</tr>
+<tr class="even">
+<td>Senescence</td>
+<td>Growing degree/calendar days from sowing to senescence</td>
+</tr>
+<tr class="odd">
+<td>Maturity</td>
+<td>Growing degree/calendar days from sowing to maturity</td>
+</tr>
+<tr class="even">
+<td>HIstart</td>
+<td>Growing degree/calendar days from sowing to start of yield formation</td>
+</tr>
+<tr class="odd">
+<td>Flowering</td>
+<td>Duration of flowering in growing degree/calendar days (-999 for non-fruit/grain crops)</td>
+</tr>
+<tr class="even">
+<td>YldForm</td>
+<td>Duration of yield formation in growing degree/calendar days</td>
+</tr>
+<tr class="odd">
+<td>GDDmethod</td>
+<td>Growing degree day calculation method</td>
+</tr>
+<tr class="even">
+<td>Tbase</td>
+<td>Base temperature (°C) below which growth does not progress</td>
+</tr>
+<tr class="odd">
+<td>Tupp</td>
+<td>Upper temperature (°C) above which crop development no longer increases</td>
+</tr>
+<tr class="even">
+<td>PolHeatStress</td>
+<td>Pollination affected by heat stress (0 = No, 1 = Yes)</td>
+</tr>
+<tr class="odd">
+<td>Tmax_up</td>
+<td>Maximum air temperature (°C) above which pollination begins to fail</td>
+</tr>
+<tr class="even">
+<td>Tmax_lo</td>
+<td>Maximum air temperature (°C) at which pollination completely fails</td>
+</tr>
+<tr class="odd">
+<td>PolColdStress</td>
+<td>Pollination affected by cold stress (0 = No, 1 = Yes)</td>
+</tr>
+<tr class="even">
+<td>Tmin_up</td>
+<td>Minimum air temperature (°C) below which pollination begins to fail</td>
+</tr>
+<tr class="odd">
+<td>Tmin_lo</td>
+<td>Minimum air temperature (°C) at which pollination completely fails</td>
+</tr>
+<tr class="even">
+<td>TrColdStress</td>
+<td>Transpiration affected by cold temperature stress (0 = No, 1 = Yes)</td>
+</tr>
+<tr class="odd">
+<td>GDD_up</td>
+<td>Minimum GDD (°C/day) required for full crop transpiration potential</td>
+</tr>
+<tr class="even">
+<td>GDD_lo</td>
+<td>GDD (°C/day) at which no crop transpiration occurs</td>
+</tr>
+<tr class="odd">
+<td>Zmin</td>
+<td>Minimum effective rooting depth (m)</td>
+</tr>
+<tr class="even">
+<td>Zmax</td>
+<td>Maximum rooting depth (m)</td>
+</tr>
+<tr class="odd">
+<td>fshape_r</td>
+<td>Shape factor describing root expansion</td>
+</tr>
+<tr class="even">
+<td>SxTopQ</td>
+<td>Maximum root water extraction at top of root zone (m³/m³/day)</td>
+</tr>
+<tr class="odd">
+<td>SxBotQ</td>
+<td>Maximum root water extraction at bottom of root zone (m³/m³/day)</td>
+</tr>
+<tr class="even">
+<td>SeedSize</td>
+<td>Soil surface area (cm²) covered by an individual seedling at 90% emergence</td>
+</tr>
+<tr class="odd">
+<td>PlantPop</td>
+<td>Number of plants per hectare</td>
+</tr>
+<tr class="even">
+<td>CCx</td>
+<td>Maximum canopy cover (fraction of soil cover)</td>
+</tr>
+<tr class="odd">
+<td>CDC</td>
+<td>Canopy decline coefficient (fraction per GDD/calendar day)</td>
+</tr>
+<tr class="even">
+<td>CGC</td>
+<td>Canopy growth coefficient (fraction per GDD)</td>
+</tr>
+<tr class="odd">
+<td>Kcb</td>
+<td>Crop coefficient when canopy growth is complete but prior to senescence</td>
+</tr>
+<tr class="even">
+<td>fage</td>
+<td>Decline of crop coefficient due to ageing (%/day)</td>
+</tr>
+<tr class="odd">
+<td>WP</td>
+<td>Water productivity normalized for ET₀ and CO₂ (g/m²)</td>
+</tr>
+<tr class="even">
+<td>WPy</td>
+<td>Adjustment of water productivity in yield formation stage (% of WP)</td>
+</tr>
+<tr class="odd">
+<td>fsink</td>
+<td>Crop performance under elevated atmospheric CO₂ (%/100)</td>
+</tr>
+<tr class="even">
+<td>HI0</td>
+<td>Reference harvest index</td>
+</tr>
+<tr class="odd">
+<td>dHI_pre</td>
+<td>Possible increase of harvest index due to water stress before flowering (%)</td>
+</tr>
+<tr class="even">
+<td>a_HI</td>
+<td>Positive impact on HI of restricted vegetative growth during yield formation</td>
+</tr>
+<tr class="odd">
+<td>b_HI</td>
+<td>Negative impact on HI of stomatal closure during yield formation</td>
+</tr>
+<tr class="even">
+<td>dHI0</td>
+<td>Maximum allowable increase of harvest index above reference value</td>
+</tr>
+<tr class="odd">
+<td>Determinant</td>
+<td>Crop determinacy (0 = Indeterminant, 1 = Determinant)</td>
+</tr>
+<tr class="even">
+<td>exc</td>
+<td>Excess of potential fruits</td>
+</tr>
+<tr class="odd">
+<td>p_up1</td>
+<td>Upper soil water depletion threshold for canopy expansion stress</td>
+</tr>
+<tr class="even">
+<td>p_up2</td>
+<td>Upper soil water depletion threshold for canopy stomatal control stress</td>
+</tr>
+<tr class="odd">
+<td>p_up3</td>
+<td>Upper soil water depletion threshold for canopy senescence stress</td>
+</tr>
+<tr class="even">
+<td>p_up4</td>
+<td>Upper soil water depletion threshold for canopy pollination stress</td>
+</tr>
+</tbody>
+</table>
+<p>Irrigation Management strategies</p>
+<p>Irrigation management parameters are selected by creating an IrrigationManagement object. With this class we can specify a range of different irrigation management strategies. The 6 different strategies can be selected using the IrrMethod argument when creating the class. These strategies are as follows:</p>
+<ul>
+<li>IrrMethod=0: Rainfed (no irrigation)</li>
+<li>IrrMethod=1: Irrigation is triggered if soil water content drops below a specified threshold (or four thresholds representing four major crop growth stages (emergence, canopy growth, max canopy, senescence).</li>
+<li>IrrMethod=2: Irrigation is triggered every N days</li>
+<li>IrrMethod=3: Predefined irrigation schedule</li>
+<li>IrrMethod=4: Net irrigation (maintain a soil-water level by topping up all compartments daily)</li>
+<li>IrrMethod=5: Constant depth applied each day</li>
+</ul>
+
+</main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    // For code content inside modals, clipBoardJS needs to be initialized with a container option
+    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

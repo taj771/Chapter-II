@@ -130,10 +130,19 @@ return$price.bu <- adjust_for_inflation(price.bu, years, "CA", to_date = 2023)
 
 
 return_wheat <- return%>%
-  filter(crop =="wheat")
+  filter(crop =="wheat")%>%
+  mutate(dry_cost_ac = mean(dry_cost_ac),
+         irri_cost_fix_ac = mean(irri_cost_fix_ac),
+         irri_cost_var_ac = mean(irri_cost_var_ac),
+         price.bu = mean(price.bu))
+
 
 return_canola <- return%>%
-  filter(crop =="canola")
+  filter(crop =="canola")%>%
+  mutate(dry_cost_ac = mean(dry_cost_ac),
+         irri_cost_fix_ac = mean(irri_cost_fix_ac),
+         irri_cost_var_ac = mean(irri_cost_var_ac),
+         price.bu = mean(price.bu))
 
 wheat <- df_wheat%>%
   #filter(Year > 2014)%>%
@@ -196,6 +205,12 @@ return_potatao$irri_cost_fix_ac <- adjust_for_inflation(irri_cost_fix_ac, years,
 return_potatao$irri_cost_var_ac <- adjust_for_inflation(irri_cost_var_ac, years, "CA", to_date = 2023)
 return_potatao$price.ton <- adjust_for_inflation(price.ton, years, "CA", to_date = 2023)
 
+return_potatao <- return_potatao%>%
+  mutate(irri_cost_fix_ac = mean(irri_cost_fix_ac),
+         irri_cost_var_ac = mean(irri_cost_var_ac),
+         price.ton = mean(price.ton))
+  
+
 potato <- rbind(potato_ir_2018, potato_ir_2019, potato_ir_2020, potato_ir_2021, potato_ir_2022, potato_ir_2023) %>%
   mutate(
     Day = day(`Harvest Date (YYYY/MM/DD)`),
@@ -207,6 +222,8 @@ potato <- rbind(potato_ir_2018, potato_ir_2019, potato_ir_2020, potato_ir_2021, 
   ) %>%
   mutate(irrq_m3 = 4046.86*(`Seasonal irrigation (mm)`*0.001))%>%
   select(year, `Dry yield (ton/ac)`,irrq_m3,  Site)%>%
+  
+  left_join(return_potatao)%>%
   
   
   mutate(irr_level_mm = irrq_m3 / (0.001 * 4046.86),
@@ -490,7 +507,7 @@ library(patchwork)
 p <- (wheat_plot | canola_plot) / (potato_plot | weighted_plot)
 
 
-ggsave("./results/images/AverageValue_Profit.png", plot = p, width = 10, height = 7, dpi = 300)
+ggsave("./results/images/AverageValue_Profit_excludePriceCostVariablility.png", plot = p, width = 10, height = 7, dpi = 300)
 
 
 
@@ -534,7 +551,8 @@ p <- ggplot(df_profit, aes(x = factor(year), y = value,  fill = interaction(vari
   ) 
 
 
-ggsave("./results/images/AverageValue_Profit.png", plot = p, width = 10, height = 7, dpi = 300)
+
+#ggsave("./results/images/AverageValue_Profit.png", plot = p, width = 10, height = 7, dpi = 300)
 
 
 ################################################################################

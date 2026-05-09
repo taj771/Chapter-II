@@ -7,20 +7,12 @@
 # Databricks
 .databricks/
 
-# Claude / AI tooling - never commit
-.claude/
-.claude-flow/
-.swarm/
-.mcp.json
-CLAUDE.md
-
-# Symlink to OneDrive - not portable
+# Local-only symlinks / IDE configs
 AquaCrop.py
-
-# macOS
+.vscode/
 .DS_Store
 
-# Large data folders
+# Large data folders (stored on OneDrive)
 AquaCropOPSyData/
 AquaR/
 CropGeoJson/
@@ -38,8 +30,9 @@ output/
 outputs/
 results/
 Data Main Analysis/
+ClimateData/
 
-# PDFs - binary, track via OneDrive
+# PDFs
 *.pdf
 
 # Python cache

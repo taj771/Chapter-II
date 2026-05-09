@@ -1,0 +1,26 @@
+# Databricks
+.databricks/
+
+# Claude / AI tooling - never commit
+.claude/
+.claude-flow/
+.swarm/
+.mcp.json
+CLAUDE.md
+
+# Symlink to OneDrive - not portable
+AquaCrop.py
+
+# macOS
+.DS_Store
+
+# Generated outputs - large, tracked separately
+outputs/
+
+# PDFs - binary, track via OneDrive
+*.pdf
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo

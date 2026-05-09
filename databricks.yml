@@ -1,0 +1,31 @@
+# This is a Databricks asset bundle definition for WEP_Submission.
+# The Databricks extension requires databricks.yml configuration file.
+# See https://docs.databricks.com/dev-tools/bundles/index.html for documentation.
+
+bundle:
+  name: WEP_Submission
+
+resources:
+  jobs:
+    simulate_marginal:
+      name: simulate_marginal_aquacrop
+      tasks:
+        - task_key: marginal_sim
+          existing_cluster_id: 0123-211315-fp4hw1e8
+          spark_python_task:
+            python_file: /Workspace/Users/tajayalath@ua.edu/.bundle/WEP_Submission/dev/files/simulate_marginal_databricks.py
+          libraries:
+            - pypi:
+                package: aquacrop
+
+targets:
+  dev:
+    default: true
+    workspace:
+      host: https://dbc-9c907c32-f434.cloud.databricks.com
+
+  ## Optionally, there could be 'staging' or 'prod' targets here.
+  #
+  # prod:
+  #   workspace:
+  #     host: https://dbc-9c907c32-f434.cloud.databricks.com

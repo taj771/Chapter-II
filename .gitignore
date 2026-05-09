@@ -1,3 +1,9 @@
+# R
+.Rproj.user
+.Rhistory
+.RData
+.Ruserdata
+
 # Databricks
 .databricks/
 
@@ -14,8 +20,24 @@ AquaCrop.py
 # macOS
 .DS_Store
 
-# Generated outputs - large, tracked separately
+# Large data folders
+AquaCropOPSyData/
+AquaR/
+CropGeoJson/
+Data/
+IrrigationWorkshopSlides/
+Litrature/
+Litreature/
+Manuscript/
+Others/
+Presentations/
+SimET/
+census_cache/
+maps/
+output/
 outputs/
+results/
+Data Main Analysis/
 
 # PDFs - binary, track via OneDrive
 *.pdf

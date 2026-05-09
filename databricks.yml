@@ -13,7 +13,7 @@ resources:
         - task_key: marginal_sim
           existing_cluster_id: 0123-211315-fp4hw1e8
           spark_python_task:
-            python_file: /Workspace/Users/tajayalath@ua.edu/.bundle/WEP_Submission/dev/files/simulate_marginal_databricks.py
+            python_file: /Workspace/Users/tajayalath@ua.edu/.bundle/WEP_Submission/dev/files/python/simulate_marginal_databricks.py
           libraries:
             - pypi:
                 package: aquacrop

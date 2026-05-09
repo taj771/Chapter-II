@@ -14,7 +14,7 @@ print(psutil.virtual_memory())
 os.environ['DEVELOPMENT'] = 'True'
 
 # Load the downloaded Daymet data
-file_path = '/Users/tharakajayalath/Library/CloudStorage/OneDrive-UniversityofSaskatchewan/Chapter II-IrrigationValue/AquaCropOPSyData/ClimateData/CMIP6/ClimateProjforAquaCrop/CMIP245_ET.csv'
+file_path = '/Users/tharakajayalath/Library/CloudStorage/OneDrive-UniversityofSaskatchewan/Chapter II-IrrigationValue/Chapter-II/AquaCropOPSyData/ClimateData/CMIP6/ClimateProjforAquaCrop/CMIP245_ET.csv'
 climate_data = pd.read_csv(file_path, on_bad_lines='skip')
 
 
@@ -256,7 +256,7 @@ all_results = Parallel(n_jobs=15)(
 results_df = pd.DataFrame(all_results)
 
 # Save results to CSV
-output_path = "/Users/tharakajayalath/Library/CloudStorage/OneDrive-UniversityofSaskatchewan/Chapter II-IrrigationValue/AquaCropOPSyData/PotataoMarginal/TempDirectory/merged_results_1.csv"
+output_path = "/Users/tharakajayalath/Library/CloudStorage/OneDrive-UniversityofSaskatchewan/Chapter II-IrrigationValue/Chapter-II/AquaCropOPSyData/PotataoMarginal/TempDirectory/merged_results_1.csv"
 results_df.to_csv(output_path, index=False)
 
 
@@ -293,7 +293,7 @@ results_df = pd.DataFrame(all_results)
 
 # Save the results to a CSV file
 results_df.to_csv(
-    "/Users/tharakajayalath/Library/CloudStorage/OneDrive-UniversityofSaskatchewan/Chapter II-IrrigationValue/AquaCropOPSyData/PotataoMarginal/TempDirectory/merged_results_2.csv",
+    "/Users/tharakajayalath/Library/CloudStorage/OneDrive-UniversityofSaskatchewan/Chapter II-IrrigationValue/Chapter-II/AquaCropOPSyData/PotataoMarginal/TempDirectory/merged_results_2.csv",
     index=False)
 
 # Assuming you have 300 sites
@@ -331,7 +331,7 @@ results_df = pd.DataFrame(all_results)
 
 # Save the results to a CSV file
 results_df.to_csv(
-    "/Users/tharakajayalath/Library/CloudStorage/OneDrive-UniversityofSaskatchewan/Chapter II-IrrigationValue/AquaCropOPSyData/PotataoMarginal/TempDirectory/merged_results_3.csv",
+    "/Users/tharakajayalath/Library/CloudStorage/OneDrive-UniversityofSaskatchewan/Chapter II-IrrigationValue/Chapter-II/AquaCropOPSyData/PotataoMarginal/TempDirectory/merged_results_3.csv",
     index=False)
 
 # Assuming you have 300 sites
@@ -369,7 +369,7 @@ results_df = pd.DataFrame(all_results)
 
 # Save the results to a CSV file
 results_df.to_csv(
-    "/Users/tharakajayalath/Library/CloudStorage/OneDrive-UniversityofSaskatchewan/Chapter II-IrrigationValue/AquaCropOPSyData/PotataoMarginal/TempDirectory/merged_results_4.csv",
+    "/Users/tharakajayalath/Library/CloudStorage/OneDrive-UniversityofSaskatchewan/Chapter II-IrrigationValue/Chapter-II/AquaCropOPSyData/PotataoMarginal/TempDirectory/merged_results_4.csv",
     index=False)
 
 # Assuming you have 300 sites
@@ -407,7 +407,7 @@ results_df = pd.DataFrame(all_results)
 
 # Save the results to a CSV file
 results_df.to_csv(
-    "/Users/tharakajayalath/Library/CloudStorage/OneDrive-UniversityofSaskatchewan/Chapter II-IrrigationValue/AquaCropOPSyData/PotataoMarginal/TempDirectory/merged_results_5.csv",
+    "/Users/tharakajayalath/Library/CloudStorage/OneDrive-UniversityofSaskatchewan/Chapter II-IrrigationValue/Chapter-II/AquaCropOPSyData/PotataoMarginal/TempDirectory/merged_results_5.csv",
     index=False)
 
 # Assuming you have 300 sites
@@ -446,7 +446,7 @@ results_df = pd.DataFrame(all_results)
 
 # Save the results to a CSV file
 results_df.to_csv(
-    "/Users/tharakajayalath/Library/CloudStorage/OneDrive-UniversityofSaskatchewan/Chapter II-IrrigationValue/AquaCropOPSyData/PotataoMarginal/TempDirectory/merged_results_6.csv",
+    "/Users/tharakajayalath/Library/CloudStorage/OneDrive-UniversityofSaskatchewan/Chapter II-IrrigationValue/Chapter-II/AquaCropOPSyData/PotataoMarginal/TempDirectory/merged_results_6.csv",
     index=False)
 
 # Assuming you have 300 sites
@@ -484,7 +484,7 @@ results_df = pd.DataFrame(all_results)
 
 # Save the results to a CSV file
 results_df.to_csv(
-    "/Users/tharakajayalath/Library/CloudStorage/OneDrive-UniversityofSaskatchewan/Chapter II-IrrigationValue/AquaCropOPSyData/PotataoMarginal/TempDirectory/merged_results_7.csv",
+    "/Users/tharakajayalath/Library/CloudStorage/OneDrive-UniversityofSaskatchewan/Chapter II-IrrigationValue/Chapter-II/AquaCropOPSyData/PotataoMarginal/TempDirectory/merged_results_7.csv",
     index=False)
 
 # Assuming you have 300 sites
@@ -522,7 +522,7 @@ results_df = pd.DataFrame(all_results)
 
 # Save the results to a CSV file
 results_df.to_csv(
-    "/Users/tharakajayalath/Library/CloudStorage/OneDrive-UniversityofSaskatchewan/Chapter II-IrrigationValue/AquaCropOPSyData/PotataoMarginal/TempDirectory/merged_results_8.csv",
+    "/Users/tharakajayalath/Library/CloudStorage/OneDrive-UniversityofSaskatchewan/Chapter II-IrrigationValue/Chapter-II/AquaCropOPSyData/PotataoMarginal/TempDirectory/merged_results_8.csv",
     index=False)
 
 # Assuming you have 300 sites
@@ -560,7 +560,7 @@ results_df = pd.DataFrame(all_results)
 
 # Save the results to a CSV file
 results_df.to_csv(
-    "/Users/tharakajayalath/Library/CloudStorage/OneDrive-UniversityofSaskatchewan/Chapter II-IrrigationValue/AquaCropOPSyData/PotataoMarginal/TempDirectory/merged_results_9.csv",
+    "/Users/tharakajayalath/Library/CloudStorage/OneDrive-UniversityofSaskatchewan/Chapter II-IrrigationValue/Chapter-II/AquaCropOPSyData/PotataoMarginal/TempDirectory/merged_results_9.csv",
     index=False)
 
 # Assuming you have 300 sites
@@ -599,7 +599,7 @@ results_df = pd.DataFrame(all_results)
 
 # Save the results to a CSV file
 results_df.to_csv(
-    "/Users/tharakajayalath/Library/CloudStorage/OneDrive-UniversityofSaskatchewan/Chapter II-IrrigationValue/AquaCropOPSyData/PotataoMarginal/TempDirectory/merged_results_10.csv",
+    "/Users/tharakajayalath/Library/CloudStorage/OneDrive-UniversityofSaskatchewan/Chapter II-IrrigationValue/Chapter-II/AquaCropOPSyData/PotataoMarginal/TempDirectory/merged_results_10.csv",
     index=False)
 
 # Assuming you have 300 sites
@@ -638,7 +638,7 @@ results_df = pd.DataFrame(all_results)
 
 # Save the results to a CSV file
 results_df.to_csv(
-    "/Users/tharakajayalath/Library/CloudStorage/OneDrive-UniversityofSaskatchewan/Chapter II-IrrigationValue/AquaCropOPSyData/PotataoMarginal/TempDirectory/merged_results_11.csv",
+    "/Users/tharakajayalath/Library/CloudStorage/OneDrive-UniversityofSaskatchewan/Chapter II-IrrigationValue/Chapter-II/AquaCropOPSyData/PotataoMarginal/TempDirectory/merged_results_11.csv",
     index=False)
 
 # Assuming you have 300 sites
@@ -675,7 +675,7 @@ results_df = pd.DataFrame(all_results)
 
 # Save the results to a CSV file
 results_df.to_csv(
-    "/Users/tharakajayalath/Library/CloudStorage/OneDrive-UniversityofSaskatchewan/Chapter II-IrrigationValue/AquaCropOPSyData/PotataoMarginal/TempDirectory/merged_results_12.csv",
+    "/Users/tharakajayalath/Library/CloudStorage/OneDrive-UniversityofSaskatchewan/Chapter II-IrrigationValue/Chapter-II/AquaCropOPSyData/PotataoMarginal/TempDirectory/merged_results_12.csv",
     index=False)
 
 # Assuming you have 300 sites
@@ -713,7 +713,7 @@ results_df = pd.DataFrame(all_results)
 
 # Save the results to a CSV file
 results_df.to_csv(
-    "/Users/tharakajayalath/Library/CloudStorage/OneDrive-UniversityofSaskatchewan/Chapter II-IrrigationValue/AquaCropOPSyData/PotataoMarginal/TempDirectory/merged_results_13.csv",
+    "/Users/tharakajayalath/Library/CloudStorage/OneDrive-UniversityofSaskatchewan/Chapter II-IrrigationValue/Chapter-II/AquaCropOPSyData/PotataoMarginal/TempDirectory/merged_results_13.csv",
     index=False)
 
 
@@ -722,31 +722,31 @@ import pandas as pd
 
 # Load the two CSV files
 df_1 = pd.read_csv(
-    "/Users/tharakajayalath/Library/CloudStorage/OneDrive-UniversityofSaskatchewan/Chapter II-IrrigationValue/AquaCropOPSyData/PotataoMarginal/TempDirectory/merged_results_1.csv")
+    "/Users/tharakajayalath/Library/CloudStorage/OneDrive-UniversityofSaskatchewan/Chapter II-IrrigationValue/Chapter-II/AquaCropOPSyData/PotataoMarginal/TempDirectory/merged_results_1.csv")
 df_2 = pd.read_csv(
-    "/Users/tharakajayalath/Library/CloudStorage/OneDrive-UniversityofSaskatchewan/Chapter II-IrrigationValue/AquaCropOPSyData/PotataoMarginal/TempDirectory/merged_results_2.csv")
+    "/Users/tharakajayalath/Library/CloudStorage/OneDrive-UniversityofSaskatchewan/Chapter II-IrrigationValue/Chapter-II/AquaCropOPSyData/PotataoMarginal/TempDirectory/merged_results_2.csv")
 df_3 = pd.read_csv(
-    "/Users/tharakajayalath/Library/CloudStorage/OneDrive-UniversityofSaskatchewan/Chapter II-IrrigationValue/AquaCropOPSyData/PotataoMarginal/TempDirectory/merged_results_3.csv")
+    "/Users/tharakajayalath/Library/CloudStorage/OneDrive-UniversityofSaskatchewan/Chapter II-IrrigationValue/Chapter-II/AquaCropOPSyData/PotataoMarginal/TempDirectory/merged_results_3.csv")
 df_4 = pd.read_csv(
-    "/Users/tharakajayalath/Library/CloudStorage/OneDrive-UniversityofSaskatchewan/Chapter II-IrrigationValue/AquaCropOPSyData/PotataoMarginal/TempDirectory/merged_results_4.csv")
+    "/Users/tharakajayalath/Library/CloudStorage/OneDrive-UniversityofSaskatchewan/Chapter II-IrrigationValue/Chapter-II/AquaCropOPSyData/PotataoMarginal/TempDirectory/merged_results_4.csv")
 df_5 = pd.read_csv(
-    "/Users/tharakajayalath/Library/CloudStorage/OneDrive-UniversityofSaskatchewan/Chapter II-IrrigationValue/AquaCropOPSyData/PotataoMarginal/TempDirectory/merged_results_5.csv")
+    "/Users/tharakajayalath/Library/CloudStorage/OneDrive-UniversityofSaskatchewan/Chapter II-IrrigationValue/Chapter-II/AquaCropOPSyData/PotataoMarginal/TempDirectory/merged_results_5.csv")
 df_6 = pd.read_csv(
-    "/Users/tharakajayalath/Library/CloudStorage/OneDrive-UniversityofSaskatchewan/Chapter II-IrrigationValue/AquaCropOPSyData/PotataoMarginal/TempDirectory/merged_results_6.csv")
+    "/Users/tharakajayalath/Library/CloudStorage/OneDrive-UniversityofSaskatchewan/Chapter II-IrrigationValue/Chapter-II/AquaCropOPSyData/PotataoMarginal/TempDirectory/merged_results_6.csv")
 df_7 = pd.read_csv(
-    "/Users/tharakajayalath/Library/CloudStorage/OneDrive-UniversityofSaskatchewan/Chapter II-IrrigationValue/AquaCropOPSyData/PotataoMarginal/TempDirectory/merged_results_7.csv")
+    "/Users/tharakajayalath/Library/CloudStorage/OneDrive-UniversityofSaskatchewan/Chapter II-IrrigationValue/Chapter-II/AquaCropOPSyData/PotataoMarginal/TempDirectory/merged_results_7.csv")
 df_8 = pd.read_csv(
-    "/Users/tharakajayalath/Library/CloudStorage/OneDrive-UniversityofSaskatchewan/Chapter II-IrrigationValue/AquaCropOPSyData/PotataoMarginal/TempDirectory/merged_results_8.csv")
+    "/Users/tharakajayalath/Library/CloudStorage/OneDrive-UniversityofSaskatchewan/Chapter II-IrrigationValue/Chapter-II/AquaCropOPSyData/PotataoMarginal/TempDirectory/merged_results_8.csv")
 df_9 = pd.read_csv(
-    "/Users/tharakajayalath/Library/CloudStorage/OneDrive-UniversityofSaskatchewan/Chapter II-IrrigationValue/AquaCropOPSyData/PotataoMarginal/TempDirectory/merged_results_9.csv")
+    "/Users/tharakajayalath/Library/CloudStorage/OneDrive-UniversityofSaskatchewan/Chapter II-IrrigationValue/Chapter-II/AquaCropOPSyData/PotataoMarginal/TempDirectory/merged_results_9.csv")
 df_10 = pd.read_csv(
-    "/Users/tharakajayalath/Library/CloudStorage/OneDrive-UniversityofSaskatchewan/Chapter II-IrrigationValue/AquaCropOPSyData/PotataoMarginal/TempDirectory/merged_results_10.csv")
+    "/Users/tharakajayalath/Library/CloudStorage/OneDrive-UniversityofSaskatchewan/Chapter II-IrrigationValue/Chapter-II/AquaCropOPSyData/PotataoMarginal/TempDirectory/merged_results_10.csv")
 df_11 = pd.read_csv(
-    "/Users/tharakajayalath/Library/CloudStorage/OneDrive-UniversityofSaskatchewan/Chapter II-IrrigationValue/AquaCropOPSyData/PotataoMarginal/TempDirectory/merged_results_11.csv")
+    "/Users/tharakajayalath/Library/CloudStorage/OneDrive-UniversityofSaskatchewan/Chapter II-IrrigationValue/Chapter-II/AquaCropOPSyData/PotataoMarginal/TempDirectory/merged_results_11.csv")
 df_12 = pd.read_csv(
-    "/Users/tharakajayalath/Library/CloudStorage/OneDrive-UniversityofSaskatchewan/Chapter II-IrrigationValue/AquaCropOPSyData/PotataoMarginal/TempDirectory/merged_results_12.csv")
+    "/Users/tharakajayalath/Library/CloudStorage/OneDrive-UniversityofSaskatchewan/Chapter II-IrrigationValue/Chapter-II/AquaCropOPSyData/PotataoMarginal/TempDirectory/merged_results_12.csv")
 df_13 = pd.read_csv(
-    "/Users/tharakajayalath/Library/CloudStorage/OneDrive-UniversityofSaskatchewan/Chapter II-IrrigationValue/AquaCropOPSyData/PotataoMarginal/TempDirectory/merged_results_13.csv")
+    "/Users/tharakajayalath/Library/CloudStorage/OneDrive-UniversityofSaskatchewan/Chapter II-IrrigationValue/Chapter-II/AquaCropOPSyData/PotataoMarginal/TempDirectory/merged_results_13.csv")
 
 # Merge the DataFrames
 merged_results = pd.concat([df_1, df_2, df_3, df_4, df_5, df_6, df_7, df_8, df_9,
@@ -754,6 +754,6 @@ merged_results = pd.concat([df_1, df_2, df_3, df_4, df_5, df_6, df_7, df_8, df_9
 
 # Save the merged DataFrame to a new CSV file
 merged_results.to_csv(
-    '/Users/tharakajayalath/Library/CloudStorage/OneDrive-UniversityofSaskatchewan/Chapter II-IrrigationValue/AquaCropOPSyData/PotatoCMIP126/OriPrcp/PotataoCMIP126_OriPrcp2032.csv',
+    '/Users/tharakajayalath/Library/CloudStorage/OneDrive-UniversityofSaskatchewan/Chapter II-IrrigationValue/Chapter-II/AquaCropOPSyData/PotatoCMIP126/OriPrcp/PotataoCMIP126_OriPrcp2032.csv',
     index=False)
 

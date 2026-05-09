@@ -8,7 +8,8 @@ library(priceR)
 library(lubridate)
 library(xtable)
 
-BASE  <- "./AquaCropOPSyData"
+BASE         <- "./AquaCropOPSyData"        # budget files (CropReturn/)
+MARGINAL_BASE <- "./Data Main Analysis"    # Python simulation outputs
 YEARS <- 2018:2023
 
 # ── crop budgets ──────────────────────────────────────────────────────────────
@@ -44,11 +45,11 @@ fixed_val <- function(mv, col, mm = 150) mv[[col]][mv$Max_Irrigation_mm == mm][1
 
 # ── per-year MV loaders ───────────────────────────────────────────────────────
 
-load_grain_mv <- function(crop, conv, yr, budget, mdir, rfdir, prof_col) {
+load_grain_mv <- function(crop, conv, yr, budget, prof_col) {
   bg <- filter(budget, crop == crop, year == yr)
 
   ir <- read_csv(
-    glue("{BASE}/{mdir}/merged_simulation_results_{crop}_marginal_{yr}_irrigation.csv"),
+    glue("{MARGINAL_BASE}/merged_simulation_results_{crop}_marginal_{yr}_irrigation.csv"),
     show_col_types = FALSE
   ) %>%
     mutate(yield_bu_ac  = Yield_tonne_per_ha * conv / 2.47,
@@ -57,7 +58,7 @@ load_grain_mv <- function(crop, conv, yr, budget, mdir, rfdir, prof_col) {
                           irri_cost(irrq_m3, bg$irri_cost_var_ac, bg$irri_cost_fix_ac)) %>%
     select(Site_ID, Max_Irrigation_mm, irrq_m3, profit_ir)
 
-  rf <- read_csv(glue("{BASE}/{rfdir}/{crop}_rainfed_{yr}.csv"), show_col_types = FALSE) %>%
+  rf <- read_csv(glue("{MARGINAL_BASE}/{crop}_rainfed_{yr}.csv"), show_col_types = FALSE) %>%
     rename(Site_ID = Site) %>%
     mutate(irrq_m3           = 4046.86 * `Seasonal irrigation (mm)` * 0.001,
            Max_Irrigation_mm = `Seasonal irrigation (mm)`,
@@ -71,7 +72,7 @@ load_grain_mv <- function(crop, conv, yr, budget, mdir, rfdir, prof_col) {
 
 load_potato_mv <- function(yr, bp, prof_col) {
   read_csv(
-    glue("{BASE}/PotataoMarginal/merged_simulation_results_Potato_marginal_{yr}_irrigation.csv"),
+    glue("{MARGINAL_BASE}/merged_simulation_results_potato_marginal_{yr}_irrigation.csv"),
     show_col_types = FALSE
   ) %>%
     mutate(yield_ton_ac = Yield_tonne_per_ha / 2.47,
@@ -113,8 +114,8 @@ alloc_3crop <- function(mv_a, mv_b, mv_c, col_a, col_b, col_c, quota,
 # ── per-year wrapper ──────────────────────────────────────────────────────────
 
 compute_year <- function(yr, bw, bc, bp) {
-  wheat  <- load_grain_mv("wheat",  36.74, yr, bw, "WheatMarginal",  "WheatRainfed",  "prof_wheat")
-  canola <- load_grain_mv("canola", 44.09, yr, bc, "canolaMarginal", "canolaRainfed", "prof_canola")
+  wheat  <- load_grain_mv("wheat",  36.74, yr, bw, "prof_wheat")
+  canola <- load_grain_mv("canola", 44.09, yr, bc, "prof_canola")
   potato <- load_potato_mv(yr, bp, "prof_potato")
 
   wr <- seq(0, 200, 10); cr <- seq(0, 200, 10); pr <- seq(0, 260, 10)

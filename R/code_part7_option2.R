@@ -131,7 +131,7 @@ process_three_crop_site <- function(site_id, wheat_sub, canola_sub, potato_sub,
 
   best %>%
     mutate(Tot_prof_scenario1  = s1,
-           net_benefit_percent = (Tot_prof_scenario2 - s1) / abs(Tot_prof_scenario2) * 100)
+           net_benefit_percent = (Tot_prof_scenario2 - s1) / abs(s1) * 100)
 }
 
 process_three_crop <- function(yr, bw, bc, bp, site_ids) {
@@ -176,7 +176,7 @@ plan(multisession, workers = parallel::detectCores() - 1)
 handlers(global = TRUE)
 handlers("progress")
 
-site_ids <- 1:139
+site_ids <- sort(unique(df_wheat_canola$Site_ID))
 
 df_wheat_canola_potato <- map_dfr(YEARS, process_three_crop, bw, bc, bp, site_ids)
 write_csv(df_wheat_canola_potato,

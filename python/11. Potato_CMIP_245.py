@@ -173,7 +173,7 @@ def run_model(smts, max_irr_season, year1, year2, wdf):
                 Senescence=110,
                 Maturity=135,
                 HIstart=75,
-                WP=16,
+                WP=15,
                 HI0=0.60,
                 dHI_pre=0.10,
                 fshape_w2=8,

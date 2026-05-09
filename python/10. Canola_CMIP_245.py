@@ -166,7 +166,7 @@ def run_model(smts, max_irr_season, year1, year2, wdf):
                 #Senescence=821,
                 #HIstart=224,
                 Zmax=0.7,
-                WP=16,
+                WP=14,
                 Tmin_up=8,
                 Tmax_lo=40,
                 exc=50,

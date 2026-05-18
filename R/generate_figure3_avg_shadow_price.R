@@ -131,6 +131,10 @@ df_all <- wheat  %>% rename(prof_wheat  = prof_val_mm) %>%
                          prof_potato * w_potato) %>%
   select(year, Site, prof_wheat, prof_canola, prof_potato, prof_weighted)
 
+# ── save results ─────────────────────────────────────────────────────────────
+
+write_csv(df_all, "./results/avg_shadow_prices.csv")
+
 # ── plots ─────────────────────────────────────────────────────────────────────
 
 make_panel <- function(data, var, title, color, ylim, ybreaks) {
@@ -152,10 +156,10 @@ df_long <- df_all %>%
   mutate(variable = factor(variable,
     levels = c("prof_wheat", "prof_canola", "prof_potato", "prof_weighted")))
 
-p <- make_panel(df_long, "prof_wheat",    "Wheat",    "springgreen4", c(-1.5, 2),  seq(-1.5, 2,  0.5)) |
-     make_panel(df_long, "prof_canola",   "Canola",   "firebrick3",   c(-1.5, 2),  seq(-1.5, 2,  0.5)) /
-    (make_panel(df_long, "prof_potato",   "Potato",   "goldenrod1",   c(2, 8),     seq(-2, 8,    0.5)) |
-     make_panel(df_long, "prof_weighted", "Weighted", "purple3",      c(-1, 1),    seq(-1, 1,    0.5)))
+p <- (make_panel(df_long, "prof_wheat",    "Wheat",    "springgreen4", c(-0.25, 0.50), seq(-0.25, 0.50, 0.25)) |
+      make_panel(df_long, "prof_canola",   "Canola",   "firebrick3",   c(-0.25, 0.75), seq(-0.25, 0.75, 0.25))) /
+     (make_panel(df_long, "prof_potato",   "Potato",   "goldenrod1",   c(1.00, 4.00),  seq( 1.00, 4.00, 0.50)) |
+      make_panel(df_long, "prof_weighted", "Weighted", "purple3",      c( 0.00, 0.75),  seq( 0.00, 0.75, 0.25)))
 
-ggsave("./results/images/AverageValue_Profit_excludePriceCostVariablility.png",
+ggsave("./Dissertation_Latex_Project/Figures2/AverageValue_Profit_excludePriceCostVariablility.png",
        plot = p, width = 10, height = 7, dpi = 300)

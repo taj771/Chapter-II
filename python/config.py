@@ -6,9 +6,11 @@ import os
 
 # ── paths ─────────────────────────────────────────────────────────────────────
 BASE_DIR    = os.path.dirname(os.path.abspath(__file__))
-CLIMATE_CSV = os.path.join(BASE_DIR, "daymet_data_with_et0.csv")
-WEATHER_DIR = os.path.join(BASE_DIR, "ClimateData")
-OUTPUT_DIR  = os.path.join(BASE_DIR, "..", "Data Main Analysis")
+CLIMATE_CSV  = os.path.join(BASE_DIR, "..", "Data", "ERA5", "era5_daily_et0.csv")
+SOIL_CSV     = os.path.join(BASE_DIR, "..", "Data", "ERA5", "era5_soil_types.csv")
+PLANT_CSV    = os.path.join(BASE_DIR, "..", "Data", "ERA5", "era5_planting_dates.csv")
+WEATHER_DIR  = os.path.join(BASE_DIR, "ClimateData")
+OUTPUT_DIR   = os.path.join(BASE_DIR, "..", "Data Main Analysis")
 
 # ── simulation years ──────────────────────────────────────────────────────────
 YEARS = list(range(2018, 2024))
@@ -32,7 +34,7 @@ WHEAT = dict(
     Tbase=5,
     Tupp=35,
     Zmax=0.7,
-    WP=16,          # Saiyed et al. 2009; Mkhabela et al. 2012
+    WP=10,          # calibrated to ICDC district benchmark 75 bu/ac (5.04 t/ha); Saiyed et al. 2009 default=16
     Tmin_up=8,
     Tmax_lo=40,
     exc=50,
@@ -106,5 +108,5 @@ POTATO = dict(      # WP=15 AquaCrop default; all potato simulations
 CROPS = {'wheat': WHEAT, 'canola': CANOLA, 'potato': POTATO}
 
 # Maximum irrigation levels tested in marginal simulations (mm)
-MAX_IRR_LEVELS = list(range(10, 210, 10))   # 10, 20, ..., 200 mm
-MAX_IRR_POTATO = list(range(10, 270, 10))   # 10, 20, ..., 260 mm (potato needs more)
+MAX_IRR_LEVELS = list(range(10, 210, 20))   # 10, 30, ..., 190 mm (20mm steps — wheat/canola)
+MAX_IRR_POTATO = list(range(10, 270, 10))   # 10, 20, ..., 260 mm (10mm steps — potato steep early curve)

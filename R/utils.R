@@ -105,13 +105,17 @@ compute_shadow_prices <- function() {
     select(year, Site, prof_val_mm)
 
   # Area-weighted average
-  left_join(wheat  %>% rename(prof_wheat  = prof_val_mm), by = c("year", "Site"),
-    left_join(canola %>% rename(prof_canola = prof_val_mm),
-      potato %>% rename(prof_potato = prof_val_mm), by = c("year", "Site")),
-  ) %>%
+  wheat %>% rename(prof_wheat = prof_val_mm) %>%
+    left_join(canola %>% rename(prof_canola = prof_val_mm), by = c("year", "Site")) %>%
+    left_join(potato %>% rename(prof_potato = prof_val_mm), by = c("year", "Site")) %>%
     left_join(WEIGHTS, by = "year") %>%
     mutate(prof_weighted = prof_wheat * w_wheat +
                            prof_canola * w_canola +
                            prof_potato * w_potato) %>%
     select(year, Site, prof_wheat, prof_canola, prof_potato, prof_weighted)
+}
+
+save_shadow_prices <- function(df, path = "./results/avg_shadow_prices.csv") {
+  write_csv(df, path)
+  invisible(df)
 }

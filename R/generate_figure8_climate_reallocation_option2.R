@@ -227,7 +227,7 @@ p <- ggplot(df_all, aes(x = type, y = net_benefit_percent, fill = type, color = 
     legend.key.size  = unit(0.3, "cm")
   )
 
-ggsave("./results/images/reallocationBenefitsclimatechnage_option2.png",
+ggsave("./Dissertation_Latex_Project/Figures2/reallocationBenefitsclimatechnage_option2.png",
        plot = p, width = 10, height = 7, dpi = 300)
 
 # ── summary statistics ────────────────────────────────────────────────────────

@@ -35,6 +35,24 @@ ClimateData/
 # PDFs
 *.pdf
 
+# LaTeX auxiliary files
+*.aux
+*.bbl
+*.bcf
+*.blg
+*.fdb_latexmk
+*.fls
+*.loc
+*.lof
+*.log
+*.lot
+*.out
+*.run.xml
+*.soc
+*.synctex.gz
+*.toc
+texput.log
+
 # Python cache
 __pycache__/
 *.pyc

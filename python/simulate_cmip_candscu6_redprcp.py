@@ -1,16 +1,18 @@
 """
-CMIP245 all-crop (SSP2-4.5) marginal simulations — 20% reduced precipitation.
-Replaces: 12. Climate_chnage_CMIP245_PrcpRed.py
+CanDCS-U6 (BCCAQv2+ANUSPLIN300) marginal simulations — 20% reduced precipitation.
+342 ERA5-consistent sites, SSP2-4.5, 2030-2050.
 
-Primary output for R analysis (code_part7_option2.R reads these files).
+Input:  CMIP245_ET_candscu6_CanESM5_20redPrcp.csv  (from download_candscu6_pavics.py)
+        ReferenceET pre-computed with ERA5 monthly wind — do NOT recompute.
 
-Outputs (one CSV per crop per year, 2030-2050):
-  {ONEDRIVE}/WheatCMIP245/RedPrcp/WheatCMIP245_RedPrcp{year}.csv
-  {ONEDRIVE}/CanolaCMIP245/RedPrcp/CanolaCMIP245_RedPrcp{year}.csv
-  {ONEDRIVE}/PotatoCMIP245/RedPrcp/PotataoCMIP245_RedPrcp{year}.csv
+Outputs (one CSV per crop per year):
+  {ONEDRIVE}/WheatCMIP245/CanDCSU6_RedPrcp/WheatCanDCSU6_RedPrcp{year}.csv
+  {ONEDRIVE}/CanolaCMIP245/CanDCSU6_RedPrcp/CanolaCanDCSU6_RedPrcp{year}.csv
+  {ONEDRIVE}/PotatoCMIP245/CanDCSU6_RedPrcp/PotatoCanDCSU6_RedPrcp{year}.csv
   Columns: Site_ID, Max_Irrigation_mm, Yield_tonne_per_ha, Total_Irrigation_mm
 
-Input: CMIP245_20redPrcp_ET.csv  (20% precipitation reduction scenario)
+Compare outputs with CanDCSU6_OriPrcp to isolate 20% precipitation reduction effect
+on irrigation demand and the economic value of flexible water allocation.
 """
 import os, gc, sys
 import pandas as pd
@@ -31,43 +33,25 @@ ONEDRIVE_BASE = (
 )
 CLIMATE_CSV = os.path.join(
     ONEDRIVE_BASE,
-    "ClimateData/CMIP6/ClimateProjforAquaCrop/CMIP245_20redPrcp_ET.csv"
+    "ClimateData/CMIP6/ClimateProjforAquaCrop/CMIP245_ET_candscu6_CanESM5_20redPrcp.csv"
 )
-WEATHER_DIR = os.path.join(ONEDRIVE_BASE, "ClimateData/CMIP_Weather_245_RedPrcp")
+WEATHER_DIR = os.path.join(ONEDRIVE_BASE, "ClimateData/CanDCSU6_Weather_RedPrcp")
 
 # ── settings ──────────────────────────────────────────────────────────────────
-YEARS = list(range(2030, 2051))
+YEARS  = [2031, 2033, 2038, 2044, 2050]  # P5/P10/P70/P50/P100 GS-precip quantiles
+N_JOBS = max(1, os.cpu_count() - 1)
 
 CROP_CONFIGS = [
     # (name, params, irr_levels, yield_col, out_subdir, file_prefix)
-    ('wheat',  WHEAT,  [0] + list(range(10, 210, 10)), 'Dry yield (tonne/ha)',
-     'WheatCMIP245/RedPrcp',  'WheatCMIP245_RedPrcp'),
-    ('canola', CANOLA, [0] + list(range(10, 210, 10)), 'Dry yield (tonne/ha)',
-     'CanolaCMIP245/RedPrcp', 'CanolaCMIP245_RedPrcp'),
-    ('potato', POTATO, [0] + list(range(10, 270, 10)), 'Fresh yield (tonne/ha)',
-     'PotatoCMIP245/RedPrcp', 'PotataoCMIP245_RedPrcp'),
+    ('wheat',  WHEAT,  [0] + list(range(10, 210, 20)), 'Dry yield (tonne/ha)',
+     'WheatCMIP245/CanDCSU6_RedPrcp',  'WheatCanDCSU6_RedPrcp'),
+    ('canola', CANOLA, [0] + list(range(10, 210, 20)), 'Dry yield (tonne/ha)',
+     'CanolaCMIP245/CanDCSU6_RedPrcp', 'CanolaCanDCSU6_RedPrcp'),
+    ('potato', POTATO, [0] + list(range(10, 270, 40)), 'Fresh yield (tonne/ha)',
+     'PotatoCMIP245/CanDCSU6_RedPrcp', 'PotatoCanDCSU6_RedPrcp'),
 ]
 
 # ── helpers ───────────────────────────────────────────────────────────────────
-
-# Monthly mean 2m wind speed (m/s) from ERA5 2018-2023, averaged across 342 sites.
-# Replaces fixed u=2.0 (which underestimates Saskatchewan prairie wind by ~37%).
-# Spatial std across sites is <0.05 m/s — single monthly value sufficient.
-ERA5_U2_MONTHLY = {
-    1: 2.920, 2: 2.868, 3: 3.006, 4: 3.038, 5: 2.801,
-    6: 2.794, 7: 2.708, 8: 2.663, 9: 2.842, 10: 2.913,
-    11: 2.863, 12: 2.747
-}
-
-def compute_et0(df):
-    T_mean = (df['MaxTemp'] + df['MinTemp']) / 2
-    e_s    = 0.6108 * np.exp(17.27 * T_mean / (T_mean + 237.3))
-    delta  = 4098 * e_s / (T_mean + 237.3) ** 2
-    gamma  = 0.066
-    u      = df['Month'].map(ERA5_U2_MONTHLY).values
-    return (0.408 * delta * df['R_n'] +
-            gamma * 900 / (T_mean + 273) * u * (e_s - df['e_a'])) / \
-           (delta + gamma * (1 + 0.34 * u))
 
 def make_crop(params):
     return Crop(params['crop_type'], **{k: v for k, v in params.items() if k != 'crop_type'})
@@ -103,28 +87,35 @@ def process_site(site_id, max_irr, year, crop_params, yield_col):
 
 # ── load climate and write per-site weather files ─────────────────────────────
 
-print("Loading CMIP245 climate data (20% reduced precipitation)...")
-climate = pd.read_csv(CLIMATE_CSV, on_bad_lines='skip')
-climate['Date'] = pd.to_datetime(climate['Date'], errors='coerce')
-climate = climate.dropna(subset=['Date'])
-climate['Day']   = climate['Date'].dt.day
-climate['Month'] = climate['Date'].dt.month
-climate['Year']  = climate['Date'].dt.year
-climate['ReferenceET'] = compute_et0(climate)
+if not os.path.exists(CLIMATE_CSV):
+    print(f"ERROR: {CLIMATE_CSV}")
+    print("Run download_candscu6_pavics.py first.")
+    sys.exit(1)
+
+print("Loading CanDCS-U6 climate data (20% reduced precipitation)...")
+climate = pd.read_csv(CLIMATE_CSV, parse_dates=["Date"])
+climate = climate.dropna(subset=["Date"])
+
+assert "ReferenceET" in climate.columns, "Missing ReferenceET — run download_candscu6_pavics.py"
+
+print(f"  Sites: {climate['site'].nunique()}  |  Years: {climate['Year'].min()}-{climate['Year'].max()}")
+gs = climate[climate["Month"].between(5, 8)]
+print(f"  Growing season ET0:  {gs['ReferenceET'].mean():.2f} mm/day")
+print(f"  Growing season Prcp: {gs['Precipitation'].mean():.2f} mm/day  (20% reduced)")
 
 os.makedirs(WEATHER_DIR, exist_ok=True)
 
-col_map = {'MinTemp': 'Tmin(c)', 'MaxTemp': 'Tmax(c)',
-           'Precipitation': 'Prcp(mm)', 'ReferenceET': 'Et0(mm)'}
+col_map = {"MinTemp": "Tmin(c)", "MaxTemp": "Tmax(c)",
+           "Precipitation": "Prcp(mm)", "ReferenceET": "Et0(mm)"}
 print("Writing per-site weather files (reduced precip)...")
-for site in climate['site'].unique():
-    df_s = (climate[climate['site'] == site]
-            [['Day','Month','Year','MinTemp','MaxTemp','Precipitation','ReferenceET']]
+for site in sorted(climate["site"].unique()):
+    df_s = (climate[climate["site"] == site]
+            [["Day", "Month", "Year", "MinTemp", "MaxTemp", "Precipitation", "ReferenceET"]]
             .rename(columns=col_map))
-    df_s.to_csv(os.path.join(WEATHER_DIR, f"site_{site}_weather.txt"), sep='\t', index=False)
+    df_s.to_csv(os.path.join(WEATHER_DIR, f"site_{site}_weather.txt"), sep="\t", index=False)
 
-site_ids = sorted(climate['site'].unique())
-print(f"{len(site_ids)} sites, years {YEARS[0]}-{YEARS[-1]}")
+site_ids = sorted(climate["site"].unique())
+print(f"{len(site_ids)} sites ready")
 
 # ── run simulations ───────────────────────────────────────────────────────────
 
@@ -132,21 +123,24 @@ for crop_name, crop_params, irr_levels, yield_col, out_subdir, file_prefix in CR
     out_dir = os.path.join(ONEDRIVE_BASE, out_subdir)
     os.makedirs(out_dir, exist_ok=True)
 
-    for year in YEARS:
-        print(f"[{crop_name} CMIP245 RedPrcp] year={year} — "
-              f"{len(site_ids)} sites × {len(irr_levels)} irr levels...")
-        rows = Parallel(n_jobs=-1, backend='loky')(
-            delayed(process_site)(sid, mx, year, crop_params, yield_col)
-            for mx in irr_levels
-            for sid in site_ids
+    for yr in YEARS:
+        out_file = os.path.join(out_dir, f"{file_prefix}{yr}.csv")
+        if os.path.exists(out_file):
+            print(f"  Skip (exists): {os.path.basename(out_file)}")
+            continue
+
+        print(f"\n[{crop_name} CanDCSU6 RedPrcp] year={yr} — "
+              f"{len(site_ids)} sites × {len(irr_levels)} irr levels")
+        tasks = [(sid, irr, yr, crop_params, yield_col)
+                 for sid in site_ids for irr in irr_levels]
+
+        results = Parallel(n_jobs=N_JOBS, verbose=5)(
+            delayed(process_site)(*t) for t in tasks
         )
-        rows = [r for r in rows if r is not None]
-        if rows:
-            df = pd.DataFrame(rows)
-            out_file = os.path.join(out_dir, f"{file_prefix}{year}.csv")
-            df.to_csv(out_file, index=False)
-            print(f"  → {len(df)} rows → {file_prefix}{year}.csv")
+        results = [r for r in results if r is not None]
+        pd.DataFrame(results).to_csv(out_file, index=False)
+        print(f"  Saved: {os.path.basename(out_file)} ({len(results)} rows)")
         gc.collect()
 
-print("All CMIP245 RedPrcp simulations complete.")
-print("R analysis input ready for code_part7_option2.R")
+print("\nAll CanDCS-U6 RedPrcp simulations complete.")
+print("Compare with CanDCSU6_OriPrcp outputs to quantify 20% precip reduction effect.")

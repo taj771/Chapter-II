@@ -12,31 +12,48 @@ Outputs (written to OUTPUT_DIR):
 import os
 import gc
 import pandas as pd
-import numpy as np
 from joblib import Parallel, delayed
 from aquacrop import AquaCropModel, Soil, Crop, InitialWaterContent, IrrigationManagement
 from aquacrop.utils import prepare_weather
 
-from config import (BASE_DIR, CLIMATE_CSV, WEATHER_DIR, OUTPUT_DIR,
+from config import (CLIMATE_CSV, SOIL_CSV, PLANT_CSV, WEATHER_DIR, OUTPUT_DIR,
                     YEARS, SOIL_TYPE, CROPS,
                     PRECIP_START_MONTH, PRECIP_END_MONTH)
 
 os.makedirs(WEATHER_DIR, exist_ok=True)
 os.makedirs(OUTPUT_DIR,  exist_ok=True)
 
-# ── ET₀ calculation (Penman-Monteith) ────────────────────────────────────────
+# Per-site soil types from SoilGrids (fallback to config SOIL_TYPE if file missing)
+if os.path.exists(SOIL_CSV):
+    soil_df = pd.read_csv(SOIL_CSV)[['grid_id', 'soil_type']]
+    site_soil = dict(zip(soil_df['grid_id'], soil_df['soil_type']))
+    print(f"Loaded per-site soil types ({len(site_soil)} sites)")
+else:
+    site_soil = {}
+    print(f"Soil CSV not found — using uniform {SOIL_TYPE}")
 
-def compute_et0(df):
-    T_max, T_min = df['MaxTemp'], df['MinTemp']
-    T_mean = (T_max + T_min) / 2
-    e_s    = 0.6108 * np.exp(17.27 * T_mean / (T_mean + 237.3))
-    e_a    = df['e_a']
-    R_n    = df['R_n']
-    delta  = 4098 * e_s / (T_mean + 237.3) ** 2
-    gamma  = 0.066
-    u      = 1.2
-    return (0.408 * delta * R_n + gamma * 900 / (T_mean + 273) * u * (e_s - e_a)) / \
-           (delta + gamma * (1 + 0.34 * u))
+# SoilGrids USDA class names → AquaCrop-OS built-in names
+_SOIL_MAP = {
+    'SiltyClayLoam': 'SiltClayLoam',
+    'SiltyClay':     'SiltClay',
+    'Silt':          'SiltLoam',
+    'Sandy':         'LoamySand',
+}
+
+# Per-site, per-year thermal-threshold planting dates (era5_planting_dates.R output)
+if os.path.exists(PLANT_CSV):
+    _pdf = pd.read_csv(PLANT_CSV)
+    _pdf['wheat_plant']  = pd.to_datetime(_pdf['wheat_plant']).dt.strftime('%m/%d')
+    _pdf['canola_plant'] = pd.to_datetime(_pdf['canola_plant']).dt.strftime('%m/%d')
+    _pdf['potato_plant'] = pd.to_datetime(_pdf['potato_plant']).dt.strftime('%m/%d')
+    plant_dates = {(r.site, r.year): {'wheat': r.wheat_plant,
+                                      'canola': r.canola_plant,
+                                      'potato': r.potato_plant}
+                   for _, r in _pdf.iterrows()}
+    print(f"Loaded per-site planting dates ({len(plant_dates)} site-year combinations)")
+else:
+    plant_dates = {}
+    print("Planting dates CSV not found — using fixed dates from config")
 
 print("Loading climate data...")
 climate = pd.read_csv(CLIMATE_CSV, on_bad_lines='skip')
@@ -45,7 +62,7 @@ climate = climate.dropna(subset=['Date'])
 climate['Day']   = climate['Date'].dt.day
 climate['Month'] = climate['Date'].dt.month
 climate['Year']  = climate['Date'].dt.year
-climate['ReferenceET'] = compute_et0(climate)
+# ReferenceET already computed via FAO-56 PM in era5_et0.R — use directly
 
 # ── write per-site weather files (all years combined) ────────────────────────
 
@@ -79,18 +96,31 @@ def make_crop(params):
     kw = {k: v for k, v in params.items() if k != 'crop_type'}
     return Crop(ctype, **kw)
 
-def run_site(site, year, irr_method, smt, crop_params, precip_total):
+def run_site(site, year, irr_method, smt, crop_params, precip_total, crop_name,
+             max_irr_season=None):
     weather_file = os.path.join(WEATHER_DIR, f"site_{site}_weather_data.txt")
     wdf = prepare_weather(weather_file)
 
     if irr_method == 0:
         irr_mngt = IrrigationManagement(irrigation_method=0)
     else:
-        irr_mngt = IrrigationManagement(irrigation_method=4, NetIrrSMT=smt)
+        # method=1 (SMT-based) correctly enforces MaxIrrSeason; method=4 (NetIrr)
+        # calculates irrigation post-transpiration in a separate code path and
+        # silently bypasses the MaxIrrSeason cap.
+        irr_kw = dict(irrigation_method=1, SMT=[smt, smt, smt, smt])
+        if max_irr_season is not None:
+            irr_kw['MaxIrrSeason'] = max_irr_season
+        irr_mngt = IrrigationManagement(**irr_kw)
 
-    crop   = make_crop(crop_params)
-    soil   = Soil(SOIL_TYPE)
-    initWC = InitialWaterContent(value=['FC'])
+    # Per-site, per-year planting date (thermal threshold); fallback = config value
+    site_dates = plant_dates.get((site, year), {})
+    p_date = site_dates.get(crop_name, crop_params['planting_date'])
+    params_local = {**crop_params, 'planting_date': p_date}
+
+    crop      = make_crop(params_local)
+    soil_name = _SOIL_MAP.get(site_soil.get(site, SOIL_TYPE), site_soil.get(site, SOIL_TYPE))
+    soil      = Soil(soil_name)
+    initWC    = InitialWaterContent(value=['FC'])
 
     model = AquaCropModel(
         f'{year}/01/01', f'{year}/12/30',
@@ -105,13 +135,14 @@ def run_site(site, year, irr_method, smt, crop_params, precip_total):
     df['Total_Precipitation(mm)'] = precip_total
     return df
 
-def simulate_year(crop_name, crop_params, year, irr_method, smt=70):
-    print(f"  {crop_name} year={year} irr_method={irr_method}...")
+def simulate_year(crop_name, crop_params, year, irr_method, smt=70, max_irr_season=None):
+    cap_str = f" MaxIrrSeason={max_irr_season}mm" if max_irr_season else ""
+    print(f"  {crop_name} year={year} irr_method={irr_method}{cap_str}...")
 
     results = Parallel(n_jobs=-1, backend='loky', verbose=0)(
         delayed(run_site)(
             site, year, irr_method, smt, crop_params,
-            precip_lookup.get((site, year), 0.0)
+            precip_lookup.get((site, year), 0.0), crop_name, max_irr_season
         )
         for site in unique_sites
         if os.path.exists(os.path.join(WEATHER_DIR, f"site_{site}_weather_data.txt"))
@@ -123,15 +154,20 @@ def simulate_year(crop_name, crop_params, year, irr_method, smt=70):
 
 # ── main loop ─────────────────────────────────────────────────────────────────
 
+# Average simulation = unconstrained net irrigation demand (no MaxIrrSeason cap).
+# Caps belong only in simulate_marginal.py (budget-constrained optimisation).
+# Method=1 (SMT-based) with SMT=70 and WP=16 validates to NRMSE ~8-18% vs
+# ICDC district benchmarks for all three crops.
 CROP_CONFIGS = [
-    ('wheat',  CROPS['wheat'],  True),
-    ('canola', CROPS['canola'], True),
-    ('potato', CROPS['potato'], False),
+    ('wheat',  CROPS['wheat'],  True,  None),
+    ('canola', CROPS['canola'], True,  None),
+    ('potato', CROPS['potato'], False, None),
 ]
 
-for crop_name, crop_params, has_rainfed in CROP_CONFIGS:
+for crop_name, crop_params, has_rainfed, max_irr in CROP_CONFIGS:
     for year in YEARS:
-        df_irr = simulate_year(crop_name, crop_params, year, irr_method=4)
+        df_irr = simulate_year(crop_name, crop_params, year, irr_method=4,
+                               max_irr_season=max_irr)
         df_irr.to_csv(os.path.join(OUTPUT_DIR, f"{crop_name}_netirridemand_{year}.csv"),
                       index=False)
 

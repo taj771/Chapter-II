@@ -1,0 +1,52 @@
+{
+  "name": "CanDCSU6_AquaCrop_Pipeline",
+  "tasks": [
+    {
+      "task_key": "OriPrcp",
+      "description": "CanDCS-U6 AquaCrop marginal simulations — original precipitation",
+      "notebook_task": {
+        "notebook_path": "/Workspace/WEP/simulate_cmip_candscu6_databricks",
+        "base_parameters": {
+          "scenario": "OriPrcp"
+        }
+      },
+      "new_cluster": {
+        "spark_version": "15.4.x-scala2.12",
+        "node_type_id": "Standard_DS4_v2",
+        "num_workers": 8,
+        "spark_conf": {
+          "spark.scheduler.mode": "FAIR"
+        },
+        "libraries": [
+          {"pypi": {"package": "aquacrop"}}
+        ]
+      },
+      "timeout_seconds": 43200
+    },
+    {
+      "task_key": "RedPrcp",
+      "description": "CanDCS-U6 AquaCrop marginal simulations — 20% reduced precipitation",
+      "depends_on": [{"task_key": "OriPrcp"}],
+      "notebook_task": {
+        "notebook_path": "/Workspace/WEP/simulate_cmip_candscu6_databricks",
+        "base_parameters": {
+          "scenario": "RedPrcp"
+        }
+      },
+      "new_cluster": {
+        "spark_version": "15.4.x-scala2.12",
+        "node_type_id": "Standard_DS4_v2",
+        "num_workers": 8,
+        "spark_conf": {
+          "spark.scheduler.mode": "FAIR"
+        },
+        "libraries": [
+          {"pypi": {"package": "aquacrop"}}
+        ]
+      },
+      "timeout_seconds": 43200
+    }
+  ],
+  "max_concurrent_runs": 1,
+  "format": "MULTI_TASK"
+}

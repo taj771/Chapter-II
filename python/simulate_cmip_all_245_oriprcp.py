@@ -43,11 +43,19 @@ CROP_CONFIGS = [
 
 # ── helpers ───────────────────────────────────────────────────────────────────
 
+# Monthly mean 2m wind speed (m/s) from ERA5 2018-2023, averaged across 342 sites.
+ERA5_U2_MONTHLY = {
+    1: 2.920, 2: 2.868, 3: 3.006, 4: 3.038, 5: 2.801,
+    6: 2.794, 7: 2.708, 8: 2.663, 9: 2.842, 10: 2.913,
+    11: 2.863, 12: 2.747
+}
+
 def compute_et0(df):
     T_mean = (df['MaxTemp'] + df['MinTemp']) / 2
     e_s    = 0.6108 * np.exp(17.27 * T_mean / (T_mean + 237.3))
     delta  = 4098 * e_s / (T_mean + 237.3) ** 2
-    gamma, u = 0.066, 2.0
+    gamma  = 0.066
+    u      = df['Month'].map(ERA5_U2_MONTHLY).values
     return (0.408 * delta * df['R_n'] +
             gamma * 900 / (T_mean + 273) * u * (e_s - df['e_a'])) / \
            (delta + gamma * (1 + 0.34 * u))
